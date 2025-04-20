@@ -1,0 +1,37 @@
+<div class="bg-[url('/assets/images/pizza-background.jpg')] bg-cover bg-center h-screen w-full flex flex-col gap-20 justify-center items-center"
+    style="user-select: none; -webkit-user-drag: none;">
+
+    <h1 class="z-10 text-white text-6xl font-bold">Pizza Delivery App</h1>
+
+    <div class="blurred-background lg:size-128 w-[85%] border border-gray-100">
+        <div class="content p-10 text-white">
+            <h3 class="text-center text-4xl font-bold mb-20">Login</h3>
+
+            <form [formGroup]="loginFormGroup" autocomplete="off">
+                <div class="flex flex-col gap-2 mb-5">
+                    <label for="username"><strong>Email</strong></label>
+                    <input pInputText id="username" aria-describedby="username-help" formControlName="email" />
+                    <!-- <small id="username-help">Enter your username to reset your password.</small> -->
+                </div>
+
+
+                <div class="flex flex-col gap-2 mb-10">
+                    <label for="password"><strong>Password</strong></label>
+                    <p-password styleClass="w-full" inputStyleClass="w-full" id="password" formControlName="password"
+                        [feedback]="false" toggleMask />
+                    <!-- <small id="username-help">Enter your username to reset your password.</small> -->
+                </div>
+
+                <p-button label="LOGIN" styleClass="w-full" class="py-2 rounded-xl font-bold">
+                </p-button>
+
+                <!-- href="/customer-register" -->
+                <span>Don't have an account? <a class="font-bold cursor-pointer">Register</a></span>
+
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
