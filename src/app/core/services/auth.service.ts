@@ -8,8 +8,10 @@ import {
   signOut,
   updateCurrentUser,
 } from '@angular/fire/auth';
-import { authState } from 'rxfire/auth'; // Usar rxfire para integrarlo bien con Angular
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs'; // Convierte el observable a promesa
+import { authState } from 'rxfire/auth';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { LoginForm } from '../models/LoginForm';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,9 @@ export class AuthService {
 
   currentUser$: Observable<any> = this._currentUserSubject.asObservable();
 
-  constructor(private auth: Auth) {
+  private auth: Auth = inject(Auth);
+
+  constructor() {
     authState(this.auth).subscribe((user) => {
       this._currentUserSubject.next(user);
     });
@@ -42,13 +46,12 @@ export class AuthService {
     onComplete(userAuth.user.uid);
   }
 
-  async login(email: string, password: string) {
-    email = email.trim();
-    password = password.trim();
+  async login(loginForm: LoginForm) {
+    const email = loginForm.email.trim();
+    const password = loginForm.password.trim();
 
-    return setPersistence(this.auth, browserLocalPersistence).then(() => {
-      return signInWithEmailAndPassword(this.auth, email, password);
-    });
+    await setPersistence(this.auth, browserLocalPersistence);
+    return signInWithEmailAndPassword(this.auth, email, password);
   }
 
   logout() {

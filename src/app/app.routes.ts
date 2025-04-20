@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { roleGuard } from './core/guards/role-guard.guard';
+import { ROLES } from './core/constants/roles';
 
 const unauthRedirect = () => redirectUnauthorizedTo(['/login']);
 
@@ -20,7 +21,10 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [AuthGuard, roleGuard],
-    data: { authGuardPipe: unauthRedirect, expectedRoles: ['admin'] },
+    data: {
+      authGuardPipe: unauthRedirect,
+      expectedRoles: [ROLES.INTERNAL_USER],
+    },
     loadComponent: () =>
       import('./features/admin/admin.component').then((c) => c.AdminComponent),
     children: [],
