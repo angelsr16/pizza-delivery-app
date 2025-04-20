@@ -17,22 +17,22 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root',
 })
 export class AuthService {
-  private _currentUserSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
+  private currentUserSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
 
-  currentUser$: Observable<any> = this._currentUserSubject.asObservable();
+  currentUser$: Observable<any> = this.currentUserSubject.asObservable();
 
   private auth: Auth = inject(Auth);
 
   constructor() {
     authState(this.auth).subscribe((user) => {
-      this._currentUserSubject.next(user);
+      this.currentUserSubject.next(user);
     });
   }
 
   get currentUser() {
-    return this._currentUserSubject.value;
+    return this.currentUserSubject.value;
   }
 
   async createNewUser(email: string, password: string, onComplete: Function) {

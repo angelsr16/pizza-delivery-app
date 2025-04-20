@@ -1,6 +1,5 @@
-export interface CustomUser {
+export interface UserDB {
   id: string;
-  uid: string;
   email: string;
   roles: string[];
 }

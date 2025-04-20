@@ -16,6 +16,8 @@ import { LoginForm } from '../../core/models/LoginForm';
 import { UserCredential } from 'firebase/auth';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../core/services/users.service';
+import { ROLES } from '../../core/constants/roles';
+import { Router } from '@angular/router';
 
 interface LoginFormGroup {
   email: FormControl<string>;
@@ -38,18 +40,30 @@ interface LoginFormGroup {
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
-  currentUser: any;
   loginFormGroup!: FormGroup<LoginFormGroup>;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {
-    this.authService.currentUser$.subscribe((user) => {
-      if (user) {
-        console.log('User is logged in:', user);
+    this.usersService.currentUserDB$.subscribe((userDB) => {
+      if (userDB !== null) {
+        if (userDB.roles.includes(ROLES.INTERNAL_USER)) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Greetings.',
+            detail: `Welcome ${userDB.email}`,
+          });
+          this.router.navigate(['/admin']);
+          return;
+        }
+
+        if (userDB.roles.includes(ROLES.CUSTOMER)) {
+          this.router.navigate(['/']);
+        }
       }
     });
 
@@ -73,16 +87,19 @@ export class AuthComponent {
 
   onLoginSubmit() {
     const loginFormData: LoginForm = this.loginFormGroup.getRawValue();
-    this.authService.login(loginFormData).catch((error) => {
-      console.log(error.message);
+    this.authService
+      .login(loginFormData)
+      .then((user) => {
+        this.resetLoginFormGroup();
+      })
+      .catch((error) => {
+        this.resetLoginFormGroup();
 
-      this.resetLoginFormGroup();
-
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Incorrect email or password',
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Incorrect email or password',
+        });
       });
-    });
   }
 }
