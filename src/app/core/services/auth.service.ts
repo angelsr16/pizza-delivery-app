@@ -27,6 +27,7 @@ export class AuthService {
 
   constructor() {
     authState(this.auth).subscribe((user) => {
+      // this.logout();
       this.currentUserSubject.next(user);
     });
   }

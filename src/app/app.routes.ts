@@ -25,9 +25,8 @@ export const routes: Routes = [
       authGuardPipe: unauthRedirect,
       expectedRoles: [ROLES.INTERNAL_USER],
     },
-    loadComponent: () =>
-      import('./features/admin/admin.component').then((c) => c.AdminComponent),
-    children: [],
+    loadChildren: () =>
+      import('./features/admin/admin.routes').then((r) => r.adminRoutes),
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];

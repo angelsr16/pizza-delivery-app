@@ -1,0 +1,33 @@
+<div class="flex flex-col h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out px-4 py-6"
+    [ngClass]="isExpanded ? 'w-full sm:w-64' : 'w-16'">
+
+    <div class="flex items-center justify-between">
+        @if (isExpanded) {
+        <p class="text-lg sm:text-xl font-bold whitespace-nowrap">
+            ADMIN 🍕
+        </p>
+        }
+
+        <button class="p-2 text-gray-300 hover:text-white transition-colors duration-200" (click)="toggleSidebar()"
+            [attr.aria-label]="isExpanded ? 'Collapse sidebar' : 'Expand sidebar'">
+            <i class="pi cursor-pointer" [ngClass]="isExpanded ? 'pi-window-minimize' : 'pi-window-maximize'"
+                [ngStyle]="{ fontSize: isExpanded ? '1rem' : '1.25rem' }">
+            </i>
+        </button>
+    </div>
+
+    <div class="flex-1 mt-6 space-y-2">
+        @for (menuItem of menuItems; track $index) {
+        <a class="flex items-center p-2 rounded hover:bg-gray-700 transition-colors duration-200"
+            [routerLink]="menuItem.path" routerLinkActive="bg-gray-700 text-white"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <i class="pi" [ngClass]="menuItem.icon" style="font-size: 1.25rem;"></i>
+            @if (isExpanded) {
+            <span class="ml-3 text-xl truncate">
+                {{ menuItem.title }}
+            </span>
+            }
+        </a>
+        }
+    </div>
+</div>
