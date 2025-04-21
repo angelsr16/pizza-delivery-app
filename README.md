@@ -1,59 +1,50 @@
-# PizzaDeliveryApp
+# 🍕 Pizza Delivery App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.3.
+A modern pizza delivery platform built with Angular, TailwindCSS, Firebase, and standalone components. This application will include user authentication, role-based access (admin, staff, delivery), product management, and order processing.
 
-## Development server
+🚧 **Project Status: In Progress**  
+This project is actively being developed. Features and structure are subject to change.
 
-To start a local development server, run:
+## ✨ Features (planned & in progress)
+- 🔐 Authentication & Authorization with Firebase
+- 🧑‍💼 Role-based system (admin, staff, delivery, customer)
+- 🛒 Product Management (pizzas and drinks)
+- 📦 Order creation & tracking
+- 📱 Responsive UI with TailwindCSS
+- 📊 Admin dashboard
 
-```bash
-ng serve
-```
+## 🛠️ Tech Stack
+- [Angular 19+](https://angular.io/) with Standalone Components
+- [Firebase (Auth, Firestore)](https://firebase.google.com/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [PrimeIcons](https://primefaces.org/primeicons/) for UI icons
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+# 🍕 Aplicación de Entrega de Pizzas
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Una plataforma moderna de delivery de pizzas construida con Angular, TailwindCSS y Firebase. La aplicación incluye autenticación de usuarios, sistema de roles (admin, personal, repartidores), gestión de productos y procesamiento de pedidos.
 
-```bash
-ng generate component component-name
-```
+🚧 **Estado del proyecto: En desarrollo**  
+Este proyecto está siendo desarrollado activamente. Las funcionalidades y estructura pueden cambiar.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## ✨ Funcionalidades (planeadas y en progreso)
+- 🔐 Autenticación y autorización con Firebase
+- 🧑‍💼 Sistema de roles (admin, staff, repartidor, cliente)
+- 🛒 Gestión de productos (pizzas, bebidas)
+- 📦 Creación y seguimiento de pedidos
+- 📱 Interfaz responsive con TailwindCSS
+- 📊 Panel de administración
 
-```bash
-ng generate --help
-```
+## 🛠️ Tecnologías
+- [Angular 19+](https://angular.io/) con Componentes Standalone
+- [Firebase (Auth, Firestore)](https://firebase.google.com/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [PrimeIcons](https://primefaces.org/primeicons/) para íconos
 
-## Building
+---
 
-To build the project run:
+## 📌 Notes / Notas
+This app is part of a learning journey and personal project.  
+Esta app forma parte de un proceso de aprendizaje y proyecto personal.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
