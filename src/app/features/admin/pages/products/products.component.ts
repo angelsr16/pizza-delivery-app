@@ -32,6 +32,12 @@ export class ProductsComponent {
 
   expandedRows: { [key: string]: boolean } = {};
 
+  categoryOptions = [
+    { index: 0, label: 'All', icon: '' },
+    { index: 1, label: 'Pizzas', icon: '🍕' },
+    { index: 2, label: 'Drinks', icon: '🥤' },
+  ];
+
   filterData = {
     search: '',
     categoryIndex: 0,
