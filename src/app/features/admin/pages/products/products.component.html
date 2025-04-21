@@ -1,1 +1,38 @@
-<p>products works!</p>
+<div class="flex w-full justify-between gap-5">
+    <div class="flex gap-5">
+        <p-floatlabel>
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input pInputText id="over_label" class="rounded-full" [(ngModel)]="filterData.search"
+                    autocomplete="off" />
+            </p-iconfield>
+            <label for="over_label">Search</label>
+        </p-floatlabel>
+
+        <div [ngClass]="filterData.categoryIndex === 0 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 0"
+            class="inline-flex items-center px-5 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+            <span class="text-center">All</span>
+        </div>
+
+        <div [ngClass]="filterData.categoryIndex === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 1"
+            class="inline-flex items-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+            <span class="mr-2">🍕</span>
+            <span class="text-center">Pizzas</span>
+        </div>
+
+        <div [ngClass]="filterData.categoryIndex === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 2"
+            class="inline-flex items-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+            <span class="mr-2">🥤</span>
+            <span class="text-center">Drinks</span>
+        </div>
+    </div>
+
+
+    <button pButton severity="info" class="font-semibold" rounded>
+        Add Product
+        <i class="pi pi-plus"></i>
+    </button>
+</div>
