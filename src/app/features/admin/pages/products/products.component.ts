@@ -7,6 +7,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
+import { ProductsService } from '../../../../core/services/products.service';
+import { Product } from '../../../../core/models/Product';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-products',
@@ -18,17 +21,48 @@ import { CommonModule } from '@angular/common';
     InputTextModule,
     FloatLabelModule,
     CommonModule,
+    TableModule,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
 })
 export class ProductsComponent {
+  productsList: Product[] = [];
+  productsListToShow: Product[] = [];
+
+  expandedRows: { [key: string]: boolean } = {};
+
   filterData = {
     search: '',
     categoryIndex: 0,
   };
 
-  constructor() {
-    console.log('TEST');
+  constructor(private productsService: ProductsService) {
+    this.productsService.products$.subscribe((data) => {
+      this.productsList = data as Product[];
+      this.productsListToShow = data as Product[];
+    });
+  }
+
+  handleFilterData() {
+    this.productsListToShow = this.productsList
+      .filter((product) => {
+        if (this.filterData.categoryIndex === 0) return true;
+
+        return (
+          (product.type === 'pizza' && this.filterData.categoryIndex === 1) ||
+          (product.type === 'drink' && this.filterData.categoryIndex === 2)
+        );
+      })
+      .filter((product) => {
+        return product.name
+          .toUpperCase()
+          .trim()
+          .includes(this.filterData.search.toUpperCase().toString().trim());
+      });
+  }
+
+  toggleRow(product: Product) {
+    this.expandedRows[product.id] = !this.expandedRows[product.id];
   }
 }

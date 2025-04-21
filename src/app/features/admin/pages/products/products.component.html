@@ -1,30 +1,30 @@
-<div class="flex w-full justify-between gap-5">
-    <div class="flex gap-5">
+<div class="flex lg:flex-row flex-col w-full justify-between gap-5">
+    <div class="flex md:flex-row flex-col gap-5">
         <p-floatlabel>
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
                 <input pInputText id="over_label" class="rounded-full" [(ngModel)]="filterData.search"
-                    autocomplete="off" />
+                    (ngModelChange)="this.handleFilterData()" autocomplete="off" />
             </p-iconfield>
             <label for="over_label">Search</label>
         </p-floatlabel>
 
-        <div [ngClass]="filterData.categoryIndex === 0 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
-            (click)="filterData.categoryIndex = 0"
-            class="inline-flex items-center px-5 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+        <div [ngClass]="filterData.categoryIndex === 0 ? 'bg-blue-400 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 0" (click)="handleFilterData()"
+            class="inline-flex items-center justify-center px-5 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-400 hover:text-white">
             <span class="text-center">All</span>
         </div>
 
-        <div [ngClass]="filterData.categoryIndex === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
-            (click)="filterData.categoryIndex = 1"
-            class="inline-flex items-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+        <div [ngClass]="filterData.categoryIndex === 1 ? 'bg-blue-400 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 1" (click)="handleFilterData()"
+            class="inline-flex items-center justify-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-400 hover:text-white">
             <span class="mr-2">🍕</span>
             <span class="text-center">Pizzas</span>
         </div>
 
-        <div [ngClass]="filterData.categoryIndex === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'"
-            (click)="filterData.categoryIndex = 2"
-            class="inline-flex items-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-500 hover:text-white">
+        <div [ngClass]="filterData.categoryIndex === 2 ? 'bg-blue-400 text-white' : 'bg-gray-200'"
+            (click)="filterData.categoryIndex = 2" (click)="handleFilterData()"
+            class="inline-flex items-center justify-center px-4 py-1 rounded-full text-gray-800 cursor-pointer hover:bg-blue-400 hover:text-white">
             <span class="mr-2">🥤</span>
             <span class="text-center">Drinks</span>
         </div>
@@ -36,3 +36,84 @@
         <i class="pi pi-plus"></i>
     </button>
 </div>
+
+
+<p-table [value]="productsListToShow" stripedRows showGridlines styleClass="mt-15" dataKey="id"
+    [expandedRowKeys]="expandedRows" rowExpandMode="single" responsiveLayout="scroll">
+    <ng-template #header>
+        <tr>
+            <th class=""></th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Price</th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-product let-rowIndex="rowIndex" let-expanded="expanded">
+        <tr>
+            <td class="w-16" style="text-align: center;">{{ rowIndex + 1 }}</td>
+            <td class="w-32">
+                <img class="w-24" [src]="product.imageUrl" alt="">
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td class="w-[5%]" style="text-align: center;">
+                <span class="text-3xl">
+                    @switch (product.type) {
+                    @case ('pizza') {
+                    🍕
+                    }
+                    @case ('drink') {
+                    🥤
+                    }
+                    }
+                </span>
+            </td>
+            <td class="w-[20%]">
+                @if (product.type === 'pizza') {
+                <span (click)="toggleRow(product)" class="underline font-semibold text-blue-500 cursor-pointer">
+                    @if (!expanded) {
+                    Display price details
+                    }@else {
+                    Hide price details
+                    }
+                </span>
+                }@else {
+                $ {{ product.price | number : '1.2-2' : 'en-US' }}
+                }
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #expandedrow let-product>
+        <tr>
+            <td colspan="6">
+                <div class="flex w-full gap-20 px-15 py-5">
+                    <div>
+                        <span class="font-bold text-xl">Sizes:</span>
+                        <ul class="list-inside">
+                            <li *ngFor="let size of product.sizes" class="text-lg mt-2 ml-10">
+                                {{ size.size }} - {{ size.price | currency }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <span class="font-bold text-xl">
+                            Toppings:
+                        </span>
+                        <div class="flex gap-2 flex-wrap mt-2">
+                            @for (topping of product.toppings; track $index) {
+                            <span class="inline-flex rounded-full px-3 py bg-blue-200 font-semibold text-blue-500">
+                                {{ topping }}
+                            </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>

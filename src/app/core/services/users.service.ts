@@ -12,11 +12,9 @@ import {
   setDoc,
   where,
 } from '@angular/fire/firestore';
-import { PermissionsService } from './permissions.service';
 import { UserDB } from '../models/UserDB';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { ROLES } from '../constants/roles';
 import { Router } from '@angular/router';
 
 @Injectable({
