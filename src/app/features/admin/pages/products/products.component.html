@@ -23,7 +23,7 @@
     </div>
 
 
-    <button pButton severity="info" class="font-semibold" rounded>
+    <button pButton severity="info" class="font-semibold" rounded (click)="this.displayProductForm = true">
         Add Product
         <i class="pi pi-plus"></i>
     </button>
@@ -109,3 +109,8 @@
     </ng-template>
 
 </p-table>
+
+
+@if (displayProductForm) {
+<app-product-form (onDismiss)="this.displayProductForm = false;"></app-product-form>
+}

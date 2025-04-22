@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../core/services/products.service';
 import { Product } from '../../../../core/models/Product';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ProductFormComponent } from "./product-form/product-form.component";
 
 @Component({
   selector: 'app-products',
@@ -22,7 +24,9 @@ import { TableModule } from 'primeng/table';
     FloatLabelModule,
     CommonModule,
     TableModule,
-  ],
+    DialogModule,
+    ProductFormComponent,
+],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
 })
@@ -42,6 +46,8 @@ export class ProductsComponent {
     search: '',
     categoryIndex: 0,
   };
+
+  displayProductForm: boolean = false;
 
   constructor(private productsService: ProductsService) {
     this.productsService.products$.subscribe((data) => {

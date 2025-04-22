@@ -1,0 +1,73 @@
+<div [formGroup]="formGroup" class="flex flex-col gap-10">
+    <div class="flex flex-col gap-3">
+        <div class="w-full flex justify-between items-center mb-5">
+            <span class="font-bold">
+                SIZES
+            </span>
+
+            <p-button (onClick)="addSize()" label="Add Size" severity="info" icon="pi-plus pi" iconPos="right"
+                size="small">
+            </p-button>
+        </div>
+
+        <ng-container formArrayName="sizes">
+            <div class="flex gap-2 items-center">
+                <div class="flex-2">
+                    <p class="text-center">Size</p>
+                </div>
+                <div class="flex-2">
+                    <p class="text-center">Price</p>
+                </div>
+                <div class="flex-1">
+
+                </div>
+            </div>
+            @for (size of this.sizes.controls; track $index) {
+            <div class="flex gap-2 items-center" [formGroupName]="$index">
+                <input class="flex-2" pInputText type="text" formControlName="size">
+                <p-inputnumber class="flex-2" formControlName="price" inputId="currency-us" mode="currency"
+                    currency="USD" locale="en-US" />
+                <div class="flex-1 flex justify-center">
+                    @if ($index > 0) {
+                    <i (click)="removeSize($index)" class="pi pi-trash text-red-500 cursor-pointer"></i>
+                    }
+                </div>
+            </div>
+            }
+        </ng-container>
+    </div>
+
+    <hr class="text-gray-200">
+
+    <div>
+        <div class="w-full flex justify-between items-center mb-5">
+            <span class="font-bold">
+                TOPPINGS
+            </span>
+
+            <div class="flex gap-4 items-center">
+                <input pInputText type="text" [(ngModel)]="toppingToAdd" name="newTopping"
+                    [ngModelOptions]="{standalone: true}">
+
+                <p-button [disabled]="toppingToAdd === ''" (onClick)="addTopping()" label="Add Topping" severity="info"
+                    icon="pi-plus pi" iconPos="right" size="small">
+                </p-button>
+            </div>
+
+        </div>
+
+        <ng-container formArrayName="toppings">
+            <div class="flex gap-2 flex-wrap">
+                @for (topping of this.toppings.controls; track $index) {
+                <div
+                    class="flex items-center gap-2 justify-center px-5 py-1 rounded-full cursor-pointer bg-blue-400 text-white font-bold transition-colors duration-200">
+                    <span>
+                        {{ topping.value.name }}
+                    </span>
+                    <i (click)="removeTopping($index)" class="pi pi-times m-0" style="font-size: 0.75rem;"></i>
+                </div>
+                }
+            </div>
+        </ng-container>
+    </div>
+</div>
