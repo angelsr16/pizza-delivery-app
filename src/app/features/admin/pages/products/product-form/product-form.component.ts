@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Pizza, Product } from '../../../../../core/models/Product';
+import { Pizza, Product } from '../../../../../core/models/db/Product';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,7 +16,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
 import { PizzaFormComponent } from './pizza-form/pizza-form.component';
-import { DrinkFormComponent } from "./drink-form/drink-form.component";
+import { DrinkFormComponent } from './drink-form/drink-form.component';
+import { ImageFileUploaderComponent } from './image-file-uploader/image-file-uploader.component';
+import { ProductsService } from '../../../../../core/services/products.service';
 
 interface ProductFormGroup {
   name: string;
@@ -36,8 +38,9 @@ interface ProductFormGroup {
     AccordionModule,
     DialogModule,
     PizzaFormComponent,
-    DrinkFormComponent
-],
+    DrinkFormComponent,
+    ImageFileUploaderComponent,
+  ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
 })
@@ -62,7 +65,12 @@ export class ProductFormComponent implements OnInit {
 
   productImageFile!: File | undefined;
 
-  constructor(private formBuilder: FormBuilder) {
+  isLoading: boolean = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private productsService: ProductsService
+  ) {
     this.pizzaProductFormGroup = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
@@ -101,8 +109,17 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  handleRegisterProduct() {
-    console.log(this.currentFormGroup.getRawValue());
+  async handleRegisterProduct() {
+    if (this.productImageFile) {
+      this.isLoading = true;
+      const rawProduct = this.currentFormGroup.getRawValue();
+      await this.productsService.registerProduct(
+        rawProduct,
+        this.productImageFile
+      );
+      this.isLoading = false;
+      this.onDismiss.emit();
+    }
   }
 
   createSizeFormGroup(): FormGroup {
@@ -110,18 +127,5 @@ export class ProductFormComponent implements OnInit {
       size: ['small', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
     });
-  }
-
-  choose(event: any, callback: any) {
-    callback();
-  }
-
-  onFilesSelected(event: any) {
-    console.log("FILE")
-    this.productImageFile = event.currentFiles[0];
-  }
-
-  onFileRemoved(event: any) {
-    this.productImageFile = undefined;
   }
 }

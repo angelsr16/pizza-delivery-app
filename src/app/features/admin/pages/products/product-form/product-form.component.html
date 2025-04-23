@@ -7,50 +7,10 @@
     @if (currentFormGroup) {
     <form [formGroup]="currentFormGroup">
         <div class="flex-2 flex flex-col gap-5">
-            <p-fileUpload styleClass="h-full w-full" name="demo[]" [multiple]="false"
-                (onSelect)="onFilesSelected($event)" (onRemove)="onFileRemoved($event)" accept="image/*">
-                <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback"
-                    let-uploadCallback="uploadCallback">
-                    <div class="flex flex-wrap justify-between items-center flex-1 gap-4">
-                        <div class="flex gap-2">
-                            <p-button (onClick)="choose($event, chooseCallback)" severity="info" icon="pi pi-images"
-                                [rounded]="true" [outlined]="true" label="Choose" />
-                            <p-button (onClick)="clearCallback()" label="Cancel" icon="pi pi-times" [rounded]="true"
-                                [outlined]="true" severity="danger" [disabled]="!files || files.length === 0" />
-                        </div>
-                    </div>
-                </ng-template>
-
-                <ng-template #content let-files let-uploadedFiles="uploadedFiles"
-                    let-removeFileCallback="removeFileCallback"
-                    let-removeUploadedFileCallback="removeUploadedFileCallback">
-                    <div class="flex flex-col gap-8">
-                        <div class="flex justify-center flex-wrap gap-4">
-                            @for (file of files; track $index) {
-                            <div class="flex flex-col justify-center items-center gap-4">
-                                <div>
-                                    <img role="presentation" [alt]="file.name" [src]="file.objectURL" class="w-42" />
-                                </div>
-                                <span class="font-semibold text-ellipsis max-w-60 whitespace-nowrap overflow-hidden">{{
-                                    file.name }}</span>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                </ng-template>
-
-                <ng-template #file></ng-template>
-
-
-                <ng-template #empty>
-                    <div class="flex items-center justify-center flex-col">
-                        <i
-                            class="pi pi-cloud-upload !border-1 !rounded-full !p-8 py-10 !text-4xl !text-muted-color"></i>
-                        <p class="mt-6 mb-0">Drag and drop files to here to upload.</p>
-                    </div>
-                </ng-template>
-
-            </p-fileUpload>
+            <div class="h-full w-full">
+                <app-image-file-uploader [file]="this.productImageFile"
+                    (onFileChange)="this.productImageFile = $event"></app-image-file-uploader>
+            </div>
 
 
             <div class="flex xl:flex-row flex-col gap-5">
@@ -95,8 +55,9 @@
 
     <ng-template #footer>
         <div class="flex justify-end">
-            <p-button [disabled]="this.currentFormGroup.invalid" label="REGISTER" severity="contrast"
-                (onClick)="handleRegisterProduct()"></p-button>
+            <p-button
+                [disabled]="this.currentFormGroup.invalid || this.productImageFile === undefined || this.isLoading"
+                label="REGISTER" severity="contrast" (onClick)="handleRegisterProduct()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

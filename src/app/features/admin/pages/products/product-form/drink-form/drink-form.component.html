@@ -1,4 +1,11 @@
-<div [formGroup]="formGroup" class="flex flex-col gap-2"> 
-    <label for="" class="font-bold">VOLUME</label>
-    <input pInputText type="text" formControlName="volume">
+<div [formGroup]="formGroup" class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2">
+        <label for="" class="font-bold">PRICE</label>
+        <input pInputText type="text" formControlName="price">
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label for="" class="font-bold">VOLUME</label>
+        <input pInputText type="text" formControlName="volume">
+    </div>
 </div>

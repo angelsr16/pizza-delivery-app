@@ -8,7 +8,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../../core/services/products.service';
-import { Product } from '../../../../core/models/Product';
+import { Product } from '../../../../core/models/db/Product';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ProductFormComponent } from "./product-form/product-form.component";

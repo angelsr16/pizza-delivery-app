@@ -47,7 +47,7 @@
         <tr>
             <td class="w-16" style="text-align: center;">{{ rowIndex + 1 }}</td>
             <td class="w-32">
-                <img class="w-24" [src]="product.imageUrl" alt="">
+                <img class="w-24" [src]="product.imageFile.downloadUrl" alt="">
             </td>
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
@@ -98,7 +98,7 @@
                         <div class="flex gap-2 flex-wrap mt-2">
                             @for (topping of product.toppings; track $index) {
                             <span class="inline-flex rounded-full px-3 py bg-blue-200 font-semibold text-blue-500">
-                                {{ topping }}
+                                {{ topping.name }}
                             </span>
                             }
                         </div>
