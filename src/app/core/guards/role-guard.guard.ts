@@ -5,6 +5,7 @@ import { authState } from 'rxfire/auth';
 import { filter, firstValueFrom, take } from 'rxjs';
 import { UsersService } from '../services/users.service';
 import { UserDB } from '../models/UserDB';
+import { ROLES } from '../constants/roles';
 
 export const roleGuard: CanActivateFn = async (route, state) => {
   const usersService = inject(UsersService);
@@ -19,9 +20,13 @@ export const roleGuard: CanActivateFn = async (route, state) => {
   const expectedRoles = route.data['expectedRoles'] || [];
   const userRoles = currentUser.roles || [];
 
-  const hasPermission = userRoles.some((role) => expectedRoles.includes(role));
+  const isSuperUser = userRoles.includes(ROLES.SUPER_USER);
 
-  console.log('Has permission?', hasPermission);
+  if (isSuperUser) {
+    return true;
+  }
+
+  const hasPermission = userRoles.some((role) => expectedRoles.includes(role));
 
   return hasPermission;
 };

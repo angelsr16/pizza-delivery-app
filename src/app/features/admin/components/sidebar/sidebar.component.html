@@ -19,7 +19,8 @@
 
         <div class="flex-1 mt-6 space-y-2">
             @for (menuItem of menuItems; track $index) {
-            <a class="flex items-center p-2 rounded hover:bg-gray-700 transition-colors duration-200"
+            <a *appHasRole="menuItem.expectedRoles"
+                class="flex items-center p-2 rounded hover:bg-gray-700 transition-colors duration-200"
                 [routerLink]="menuItem.path" routerLinkActive="bg-gray-700 text-white"
                 [routerLinkActiveOptions]="{ exact: true }">
                 <i class="pi" [ngClass]="menuItem.icon" style="font-size: 1.25rem;"></i>
