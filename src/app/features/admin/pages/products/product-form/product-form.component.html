@@ -8,15 +8,20 @@
     <form [formGroup]="productForm">
         <div class="flex flex-col gap-5">
             <div class="h-full w-full">
+                @if (product && !replaceCurrentImage) {
+                <div class="flex flex-col justify-center items-center gap-5">
+                    <img [src]="product.imageFile.downloadUrl" class="w-54" alt="">
+                    <button (click)="replaceCurrentImage = true" pButton severity="danger" label="DELETE"
+                        icon="pi-trash pi" iconPos="right"></button>
+                </div>
+                }@else {
                 <app-image-file-uploader [file]="productImageFile"
-                    (onFileChange)="productImageFile = $event"></app-image-file-uploader>
+                    (onFileChange)="setImageFile($event)"></app-image-file-uploader>
+                }
             </div>
-
 
             <div class="flex xl:flex-row flex-col gap-5">
                 <div class="flex-1 flex flex-col gap-6 p-4">
-                    <!-- <app-product-base-form [formGroup]="productForm" [typeOptions]="typeOptions" [(type)]="currentType"
-                        (typeChange)="resetFormGroup($event)"></app-product-base-form> -->
                     <div class="flex flex-col gap-2">
                         <label for="typeOptions" class="font-bold">TYPE</label>
                         <p-select [disabled]="product !== undefined" id="tpyeOptions" name="type"
@@ -55,8 +60,14 @@
 
     <ng-template #footer>
         <div class="flex justify-end">
+            @if (product) {
+            <p-button
+                [disabled]="productForm.invalid || (replaceCurrentImage && productImageFile === undefined) || isLoading"
+                label="UPDATE" severity="contrast" (onClick)="handleUpdateProduct()"></p-button>
+            }@else {
             <p-button [disabled]="productForm.invalid || productImageFile === undefined || isLoading" label="REGISTER"
                 severity="contrast" (onClick)="handleRegisterProduct()"></p-button>
+            }
         </div>
     </ng-template>
 </p-dialog>

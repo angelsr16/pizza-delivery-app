@@ -29,8 +29,8 @@ export class StorageService {
     };
   }
 
-  async deleteFile(filePath: string) {
-    const fileRef = ref(this.storage, filePath);
+  async deleteFile(storagePath: string) {
+    const fileRef = ref(this.storage, storagePath);
     await deleteObject(fileRef);
   }
 

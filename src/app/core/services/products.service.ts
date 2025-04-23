@@ -7,6 +7,7 @@ import {
   Firestore,
   setDoc,
   Timestamp,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
@@ -37,6 +38,33 @@ export class ProductsService {
     collectionData(this.collectionReference).subscribe((data) => {
       this.productSubject.next(data as Product[]);
     });
+  }
+
+  async updateProduct(
+    product: Product,
+    rawProductData: RawProduct,
+    imageFile: File | undefined
+  ) {
+    const productDoc = doc(this.db, this.collectionName, product.id);
+
+    const newProduct: Product = {
+      ...product,
+      ...rawProductData,
+      updatedAt: Timestamp.now(),
+    };
+
+    if (imageFile) {
+      await this.storageService.deleteFile(product.imageFile.storagePath);
+
+      const uploadedImageFile = await this.storageService.uploadFile(
+        imageFile,
+        `products/${product.id}/${rawProductData.name}`
+      );
+
+      newProduct.imageFile = uploadedImageFile;
+    }
+
+    await updateDoc(productDoc, { ...newProduct });
   }
 
   async registerProduct(rawProductData: RawProduct, imageFile: File) {

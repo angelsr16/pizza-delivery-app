@@ -19,7 +19,6 @@ import { PizzaFormComponent } from './pizza-form/pizza-form.component';
 import { DrinkFormComponent } from './drink-form/drink-form.component';
 import { ImageFileUploaderComponent } from './image-file-uploader/image-file-uploader.component';
 import { ProductsService } from '../../../../../core/services/products.service';
-import { ProductBaseFormComponent } from './product-base-form/product-base-form.component';
 
 interface ProductFormGroup {
   name: string;
@@ -59,6 +58,7 @@ export class ProductFormComponent implements OnInit {
   ];
 
   productImageFile!: File | undefined;
+  replaceCurrentImage: boolean = false;
 
   isLoading: boolean = false;
 
@@ -74,6 +74,14 @@ export class ProductFormComponent implements OnInit {
     } else {
       this.currentType = 'pizza';
       this.productForm = this.buildForm('pizza');
+    }
+  }
+
+  setImageFile(file: File | undefined) {
+    this.productImageFile = file;
+
+    if (this.product && !file) {
+      this.replaceCurrentImage = false;
     }
   }
 
@@ -165,6 +173,20 @@ export class ProductFormComponent implements OnInit {
       this.isLoading = true;
       const rawProduct = this.productForm.getRawValue();
       await this.productsService.registerProduct(
+        rawProduct,
+        this.productImageFile
+      );
+      this.isLoading = false;
+      this.onDismiss.emit();
+    }
+  }
+
+  async handleUpdateProduct() {
+    if (this.product) {
+      this.isLoading = true;
+      const rawProduct = this.productForm.getRawValue();
+      await this.productsService.updateProduct(
+        this.product,
         rawProduct,
         this.productImageFile
       );

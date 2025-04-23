@@ -11,7 +11,6 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProductBaseFormComponent } from '../product-base-form/product-base-form.component';
 
 @Component({
   selector: 'app-pizza-form',
