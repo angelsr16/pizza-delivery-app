@@ -39,7 +39,6 @@ export class UsersService {
 
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
-        console.log('There is a user logged in');
         this.fetchUserDBData(user.uid);
       } else {
         this.currentUserDBSubject.next(null);

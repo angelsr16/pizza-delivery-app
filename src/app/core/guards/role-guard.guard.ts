@@ -11,8 +11,8 @@ export const roleGuard: CanActivateFn = async (route, state) => {
 
   const currentUser = await firstValueFrom(
     usersService.currentUserDB$.pipe(
-      filter((user): user is UserDB => user !== null), // Wait until user is not null
-      take(1) // Complete after first non-null value
+      filter((user): user is UserDB => user !== null),
+      take(1)
     )
   );
 

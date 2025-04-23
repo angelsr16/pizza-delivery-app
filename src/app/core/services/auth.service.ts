@@ -27,7 +27,6 @@ export class AuthService {
 
   constructor() {
     authState(this.auth).subscribe((user) => {
-      // this.logout();
       this.currentUserSubject.next(user);
     });
   }
@@ -55,7 +54,8 @@ export class AuthService {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  logout() {
-    return signOut(this.auth);
+  async logout() {
+    await signOut(this.auth);
+    this.currentUserSubject.next(null);
   }
 }
