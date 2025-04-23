@@ -1,25 +1,27 @@
 <p-dialog maskStyleClass="backdrop-blur" [visible]="true" styleClass="2xl:w-[65%] lg:w-[75%] w-[90%] h-screen"
-    (onHide)="this.onDismiss.emit()" (visibleChange)="this.onDismiss.emit()">
+    (onHide)="onDismiss.emit()" (visibleChange)="onDismiss.emit()">
     <ng-template #header>
         <span class="font-bold text-2xl">REGISTER</span>
     </ng-template>
 
-    @if (currentFormGroup) {
-    <form [formGroup]="currentFormGroup">
-        <div class="flex-2 flex flex-col gap-5">
+    @if (productForm) {
+    <form [formGroup]="productForm">
+        <div class="flex flex-col gap-5">
             <div class="h-full w-full">
-                <app-image-file-uploader [file]="this.productImageFile"
-                    (onFileChange)="this.productImageFile = $event"></app-image-file-uploader>
+                <app-image-file-uploader [file]="productImageFile"
+                    (onFileChange)="productImageFile = $event"></app-image-file-uploader>
             </div>
 
 
             <div class="flex xl:flex-row flex-col gap-5">
                 <div class="flex-1 flex flex-col gap-6 p-4">
+                    <!-- <app-product-base-form [formGroup]="productForm" [typeOptions]="typeOptions" [(type)]="currentType"
+                        (typeChange)="resetFormGroup($event)"></app-product-base-form> -->
                     <div class="flex flex-col gap-2">
                         <label for="typeOptions" class="font-bold">TYPE</label>
-                        <p-select id="tpyeOptions" name="type" [options]="typeOptions" [(ngModel)]="this.currentType"
-                            (ngModelChange)="resetFormGroup($event)" optionValue="value" optionLabel="label"
-                            placeholder="Select the product type" class="w-full"
+                        <p-select [disabled]="product !== undefined" id="tpyeOptions" name="type"
+                            [options]="typeOptions" [(ngModel)]="currentType" (ngModelChange)="resetFormGroup($event)"
+                            optionValue="value" optionLabel="label" placeholder="Select the product type" class="w-full"
                             [ngModelOptions]="{standalone: true}" />
                     </div>
 
@@ -35,15 +37,13 @@
                 </div>
 
                 <div class="flex-1 flex flex-col gap-4 p-4 h-full">
-                    @switch (this.currentType) {
+                    @switch (currentType) {
                     @case ('pizza') {
 
-                    <app-pizza-form [formGroup]="this.currentFormGroup" [sizes]="this.pizzaSizes"
-                        [toppings]="this.pizzaToppings"></app-pizza-form>
-
+                    <app-pizza-form [formGroup]="productForm" [sizes]="sizes" [toppings]="toppings"></app-pizza-form>
                     }
                     @case ('drink') {
-                    <app-drink-form [formGroup]="this.currentFormGroup"></app-drink-form>
+                    <app-drink-form [formGroup]="productForm"></app-drink-form>
                     }
                     }
                 </div>
@@ -55,9 +55,8 @@
 
     <ng-template #footer>
         <div class="flex justify-end">
-            <p-button
-                [disabled]="this.currentFormGroup.invalid || this.productImageFile === undefined || this.isLoading"
-                label="REGISTER" severity="contrast" (onClick)="handleRegisterProduct()"></p-button>
+            <p-button [disabled]="productForm.invalid || productImageFile === undefined || isLoading" label="REGISTER"
+                severity="contrast" (onClick)="handleRegisterProduct()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

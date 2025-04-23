@@ -22,7 +22,6 @@
 
     </div>
 
-
     <button pButton severity="info" class="font-semibold" rounded (click)="this.displayProductForm = true">
         Add Product
         <i class="pi pi-plus"></i>
@@ -40,6 +39,8 @@
             <th>Description</th>
             <th>Category</th>
             <th>Price</th>
+            <th>Last Update</th>
+            <th>Action</th>
         </tr>
     </ng-template>
 
@@ -63,7 +64,7 @@
                     }
                 </span>
             </td>
-            <td class="w-[20%]">
+            <td class="w-[15%]">
                 @if (product.type === 'pizza') {
                 <span (click)="toggleRow(product)" class="underline font-semibold text-blue-500 cursor-pointer">
                     @if (!expanded) {
@@ -75,6 +76,11 @@
                 }@else {
                 $ {{ product.price | number : '1.2-2' : 'en-US' }}
                 }
+            </td>
+            <td class="w-[15%]">{{ product.updatedAt.toMillis() | date:'MM/dd/yyyy h:mm:ss a' }}</td>
+            <td class="w-[5%]">
+                <i (click)="displayProductToEdit(product)" class="pi pi-pen-to-square text-blue-500 cursor-pointer"
+                    style="font-size: 1.25rem;"></i>
             </td>
         </tr>
     </ng-template>
@@ -112,5 +118,5 @@
 
 
 @if (displayProductForm) {
-<app-product-form (onDismiss)="this.displayProductForm = false;"></app-product-form>
+<app-product-form [product]="this.currentProduct" (onDismiss)="this.displayProductForm = false;"></app-product-form>
 }

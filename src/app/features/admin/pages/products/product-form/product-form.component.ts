@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Pizza, Product } from '../../../../../core/models/db/Product';
+import { Drink, Pizza, Product } from '../../../../../core/models/db/Product';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,6 +19,7 @@ import { PizzaFormComponent } from './pizza-form/pizza-form.component';
 import { DrinkFormComponent } from './drink-form/drink-form.component';
 import { ImageFileUploaderComponent } from './image-file-uploader/image-file-uploader.component';
 import { ProductsService } from '../../../../../core/services/products.service';
+import { ProductBaseFormComponent } from "./product-base-form/product-base-form.component";
 
 interface ProductFormGroup {
   name: string;
@@ -40,21 +41,16 @@ interface ProductFormGroup {
     PizzaFormComponent,
     DrinkFormComponent,
     ImageFileUploaderComponent,
-  ],
+    ProductBaseFormComponent
+],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
 })
 export class ProductFormComponent implements OnInit {
   @Output() onDismiss: EventEmitter<any> = new EventEmitter();
-  @Input() product!: Product;
+  @Input() product!: Product | undefined;
 
-  pizzaProductFormGroup!: FormGroup;
-  drinkProductFormGroup!: FormGroup;
-
-  pizzaSizes!: FormArray;
-  pizzaToppings!: FormArray;
-
-  currentFormGroup!: FormGroup;
+  productForm!: FormGroup;
 
   currentType: string = 'pizza';
 
@@ -70,49 +66,105 @@ export class ProductFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private productsService: ProductsService
-  ) {
-    this.pizzaProductFormGroup = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
-      sizes: this.formBuilder.array([this.createSizeFormGroup()]),
-      toppings: this.formBuilder.array([], Validators.required),
-      customizable: [false, Validators.required],
-      type: ['pizza', Validators.required],
-    });
+  ) {}
 
-    this.pizzaSizes = this.pizzaProductFormGroup.get('sizes') as FormArray;
-    this.pizzaToppings = this.pizzaProductFormGroup.get(
-      'toppings'
-    ) as FormArray;
-
-    this.drinkProductFormGroup = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
-      volume: ['', Validators.required],
-      type: ['drink', Validators.required],
-    });
-
-    this.currentFormGroup = this.pizzaProductFormGroup;
-  }
-
-  resetFormGroup(type: string) {
-    switch (type) {
-      case 'pizza':
-        this.currentFormGroup = this.pizzaProductFormGroup;
-        break;
-      case 'drink':
-        this.currentFormGroup = this.drinkProductFormGroup;
-        break;
+  ngOnInit(): void {
+    if (this.product) {
+      this.currentType = this.product.type;
+      this.productForm = this.buildForm(this.product.type, this.product);
+    } else {
+      this.currentType = 'pizza';
+      this.productForm = this.buildForm('pizza');
     }
   }
 
-  ngOnInit(): void {}
+  buildForm(type: 'pizza' | 'drink', data?: any): FormGroup {
+    if (type === 'pizza') {
+      return this.formBuilder.group({
+        name: [data?.name || '', Validators.required],
+        description: [data?.description || ''],
+        sizes: this.formBuilder.array(
+          data
+            ? this.buildSizeFormGroupFromList(data.sizes)
+            : [this.buildSizeFormGroup()]
+        ),
+        toppings: this.formBuilder.array(
+          data ? this.buildToppingsFormGroupFromList(data.toppings) : [],
+          Validators.required
+        ),
+        customizable: [data?.customizable ?? false, Validators.required],
+        type: ['pizza', Validators.required],
+      });
+    }
+
+    return this.formBuilder.group({
+      name: [data?.name || '', Validators.required],
+      description: [data?.description || ''],
+      price: [data?.price ?? 0, [Validators.required, Validators.min(0)]],
+      volume: [data?.volume || '', Validators.required],
+      type: ['drink', Validators.required],
+    });
+  }
+
+  get sizes(): FormArray {
+    return this.productForm.get('sizes') as FormArray;
+  }
+
+  get toppings(): FormArray {
+    return this.productForm.get('toppings') as FormArray;
+  }
+
+  resetFormGroup(type: 'pizza' | 'drink') {
+    this.currentType = type;
+    this.productForm = this.buildForm(type);
+  }
+
+  buildSizeFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      size: ['small', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  buildSizeFormGroupFromList(sizes: any[]): FormGroup[] {
+    const formList: any[] = [];
+    sizes.forEach((size) => {
+      formList.push(
+        this.formBuilder.group({
+          size: [size.size, Validators.required],
+          price: [size.price, [Validators.required, Validators.min(0)]],
+        })
+      );
+    });
+
+    return formList;
+  }
+
+  buildToppingsFormGroupFromList(toppings: any[]): FormGroup[] {
+    const formList: any[] = [];
+    toppings.forEach((topping) => {
+      formList.push(
+        this.formBuilder.group({
+          name: [topping.name, Validators.required],
+        })
+      );
+    });
+
+    return formList;
+  }
+
+  isPizza(product: Product): product is Pizza {
+    return product.type === 'pizza';
+  }
+
+  isDrink(product: Product): product is Drink {
+    return product.type === 'drink';
+  }
 
   async handleRegisterProduct() {
     if (this.productImageFile) {
       this.isLoading = true;
-      const rawProduct = this.currentFormGroup.getRawValue();
+      const rawProduct = this.productForm.getRawValue();
       await this.productsService.registerProduct(
         rawProduct,
         this.productImageFile
@@ -120,12 +172,5 @@ export class ProductFormComponent implements OnInit {
       this.isLoading = false;
       this.onDismiss.emit();
     }
-  }
-
-  createSizeFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      size: ['small', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
-    });
   }
 }

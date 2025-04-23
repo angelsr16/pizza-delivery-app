@@ -11,7 +11,7 @@ import { ProductsService } from '../../../../core/services/products.service';
 import { Product } from '../../../../core/models/db/Product';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
-import { ProductFormComponent } from "./product-form/product-form.component";
+import { ProductFormComponent } from './product-form/product-form.component';
 
 @Component({
   selector: 'app-products',
@@ -26,7 +26,7 @@ import { ProductFormComponent } from "./product-form/product-form.component";
     TableModule,
     DialogModule,
     ProductFormComponent,
-],
+  ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
 })
@@ -48,6 +48,7 @@ export class ProductsComponent {
   };
 
   displayProductForm: boolean = false;
+  currentProduct!: Product | undefined;
 
   constructor(private productsService: ProductsService) {
     this.productsService.products$.subscribe((data) => {
@@ -76,5 +77,10 @@ export class ProductsComponent {
 
   toggleRow(product: Product) {
     this.expandedRows[product.id] = !this.expandedRows[product.id];
+  }
+
+  displayProductToEdit(product: Product) {
+    this.currentProduct = product;
+    this.displayProductForm = true;
   }
 }

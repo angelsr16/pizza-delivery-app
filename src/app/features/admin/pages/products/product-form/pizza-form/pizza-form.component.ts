@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -11,6 +11,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProductBaseFormComponent } from '../product-base-form/product-base-form.component';
 
 @Component({
   selector: 'app-pizza-form',
@@ -25,7 +26,7 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './pizza-form.component.html',
   styleUrl: './pizza-form.component.scss',
 })
-export class PizzaFormComponent {
+export class PizzaFormComponent implements OnInit {
   @Input() formGroup!: FormGroup;
 
   @Input() sizes!: FormArray;
@@ -34,6 +35,10 @@ export class PizzaFormComponent {
   toppingToAdd: string = '';
 
   constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit(): void {
+    console.log(this.sizes);
+  }
 
   addSize() {
     this.sizes.push(
