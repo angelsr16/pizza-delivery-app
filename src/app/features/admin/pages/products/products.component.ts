@@ -79,6 +79,11 @@ export class ProductsComponent {
     this.expandedRows[product.id] = !this.expandedRows[product.id];
   }
 
+  hideProductForm() {
+    this.displayProductForm = false;
+    this.currentProduct = undefined;
+  }
+
   displayProductToEdit(product: Product) {
     this.currentProduct = product;
     this.displayProductForm = true;

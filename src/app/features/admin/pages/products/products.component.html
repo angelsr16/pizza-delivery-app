@@ -118,5 +118,5 @@
 
 
 @if (displayProductForm) {
-<app-product-form [product]="this.currentProduct" (onDismiss)="this.displayProductForm = false;"></app-product-form>
+<app-product-form [product]="this.currentProduct" (onDismiss)="hideProductForm()"></app-product-form>
 }
