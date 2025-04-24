@@ -58,4 +58,24 @@ export class AuthService {
     await signOut(this.auth);
     this.currentUserSubject.next(null);
   }
+
+  async registerNewUser(email: string, password: string): Promise<string> {
+    try {
+      // Guarda usuario loggeado actualmente
+      var currentAuthenticatedUser = this.auth.currentUser;
+
+      // Se crea el nuevo usuario y se loggea automaticamente a la nueva sesión
+      var userAuth = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      // Regresamos al usuario inicial
+      await updateCurrentUser(this.auth, currentAuthenticatedUser);
+      return userAuth.user.uid;
+    } catch (error) {
+      return '';
+    }
+  }
 }

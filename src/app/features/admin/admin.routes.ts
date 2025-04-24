@@ -11,7 +11,7 @@ export const adminRoutes: Routes = [
     path: '',
     component: AdminComponent,
     children: [
-      { path: '', redirectTo: 'products', pathMatch: 'full' },
+      // { path: '', redirectTo: 'products', pathMatch: 'full' },
       {
         path: 'products',
         component: ProductsComponent,

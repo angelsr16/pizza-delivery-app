@@ -1,7 +1,13 @@
 <p-dialog maskStyleClass="backdrop-blur" [visible]="true" styleClass="2xl:w-[65%] lg:w-[75%] w-[90%] h-screen"
     (onHide)="onDismiss.emit()" (visibleChange)="onDismiss.emit()">
     <ng-template #header>
-        <span class="font-bold text-2xl">REGISTER</span>
+        <span class="font-bold text-2xl">
+            @if (product) {
+            UPDATE
+            }@else {
+            REGISTER
+            }
+        </span>
     </ng-template>
 
     @if (productForm) {
