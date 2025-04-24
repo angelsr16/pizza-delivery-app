@@ -1,0 +1,84 @@
+<p-dialog maskStyleClass="backdrop-blur" [visible]="true" styleClass="2xl:w-[45%]  w-[80%] h-screen"
+    (onHide)="onDismiss.emit()" (visibleChange)="onDismiss.emit()">
+    <ng-template #header>
+        <span class="font-bold text-2xl">
+            @if (staff) {
+            UPDATE
+            }@else {
+            REGISTER
+            }
+        </span>
+    </ng-template>
+
+    @if (staffForm) {
+    <form autocomplete="off" [formGroup]="staffForm">
+        <div class="flex flex-col gap-5">
+            <div class="w-full">
+                <app-image-file-uploader [file]="photoFile"
+                    (onFileChange)="setImageFile($event)"></app-image-file-uploader>
+            </div>
+
+
+            @if (!staff) {
+            <div formGroupName="login" class="w-full flex gap-5">
+                <div class="w-full flex flex-col gap-2">
+                    <label for="email" class="font-bold">EMAIL</label>
+                    <input pInputText id="email" formControlName="email" />
+                </div>
+
+                <div class="w-full flex flex-col gap-2">
+                    <label for="password" class="font-bold">PASSWORD</label>
+                    <input pInputText id="password" formControlName="password" />
+                </div>
+            </div>
+            }
+            <div class="flex xl:flex-row flex-col gap-5">
+                <div class="flex-1 flex flex-col gap-6 p-4">
+                    <div class="flex flex-col gap-2">
+                        <label for="name" class="font-bold">FULL NAME</label>
+                        <input pInputText id="name" formControlName="name" />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <div class="w-full flex justify-between">
+                            <label for="roles" class="font-bold">ROLES</label>
+                            <button (click)="addRole()" pButton label="Add Role" icon="pi pi-plus" iconPos="right"
+                                class="rounded-full"></button>
+                        </div>
+
+                        <ng-container formArrayName="roles">
+                            @for (role of roles.controls; track $index) {
+                            <div class="flex gap-2 items-center" [formGroupName]="$index">
+                                <p-select (onChange)="updateAvailableOptions()" id="roles" [options]="roleOptions"
+                                    formControlName="role" optionValue="value" optionLabel="label" class="w-full"
+                                    appendTo="body">
+                                </p-select>
+
+                                <div class="flex-1 flex justify-center">
+                                    @if ($index > 0) {
+                                    <i (click)="removeRole($index)" class="pi pi-trash text-red-500 cursor-pointer"></i>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </ng-container>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    }
+
+    <ng-template #footer>
+        <div class="flex justify-end">
+            @if (staff) {
+            <p-button [disabled]="staffForm.invalid || (replaceCurrentImage && photoFile === undefined) || isLoading"
+                label="UPDATE" severity="contrast" (onClick)="handleUpdateStaff()"></p-button>
+            }@else {
+            <p-button [disabled]="staffForm.invalid || photoFile === undefined || isLoading" label="REGISTER"
+                severity="contrast" (onClick)="handleRegisterStaff()"></p-button>
+            }
+        </div>
+    </ng-template>
+</p-dialog>

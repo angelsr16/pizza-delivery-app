@@ -72,10 +72,7 @@ export class UsersService {
   }
 
   async registerUser(user: UserDB) {
-    const newUserDocReference = doc(this.collectionReference);
-
-    user.id = newUserDocReference.id;
-
+    const newUserDocReference = doc(this.collectionReference, user.id);
     await setDoc(newUserDocReference, user);
   }
 

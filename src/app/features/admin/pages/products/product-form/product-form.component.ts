@@ -17,7 +17,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
 import { PizzaFormComponent } from './pizza-form/pizza-form.component';
 import { DrinkFormComponent } from './drink-form/drink-form.component';
-import { ImageFileUploaderComponent } from './image-file-uploader/image-file-uploader.component';
+import { ImageFileUploaderComponent } from '../../../../../shared/components/image-file-uploader/image-file-uploader.component';
 import { ProductsService } from '../../../../../core/services/products.service';
 
 interface ProductFormGroup {

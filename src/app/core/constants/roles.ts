@@ -9,3 +9,10 @@ export const ROLES = {
   PRODUCTS: 'products',
   ORDERS: 'orders',
 } as const;
+
+export const ROLE_OPTIONS = [
+  { label: 'Admin', value: 'admin' },
+  { label: 'Products', value: 'products' },
+  { label: 'Orders', value: 'orders' },
+  { label: 'Staff', value: 'staff' },
+];

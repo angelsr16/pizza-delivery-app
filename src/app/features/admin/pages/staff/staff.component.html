@@ -1,1 +1,41 @@
-<p>staff works!</p>
+<div class="flex justify-between items-start">
+    <p-floatlabel>
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input pInputText id="over_label" class="rounded-full" [(ngModel)]="filterData.search"
+                (ngModelChange)="this.handleFilterData()" autocomplete="off" />
+        </p-iconfield>
+        <label for="over_label">Search</label>
+    </p-floatlabel>
+
+
+    <button (click)="this.displayStaffForm = true" pButton label="New staff" icon="pi pi-user-plus !text-xl"
+        iconPos="right" rounded severity="info" class="font-bold !text-xl"></button>
+</div>
+
+<p-table [value]="staffListToShow" stripedRows showGridlines styleClass="mt-15" dataKey="id" responsiveLayout="scroll">
+    <ng-template #header>
+        <tr>
+            <th class="w-[10%]"></th>
+            <th class="w-[10%]">Employee ID</th>
+            <th>Name</th>
+            <th class="w-[25%]">Roles</th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-staff let-rowIndex="rowIndex">
+        <tr>
+            <td class="w-[5%]" style="text-align: center;">{{ rowIndex + 1 }}</td>
+            <td class="w-[5%]">
+                {{ staff.employeeId }}
+            </td>
+            <td>{{ staff.name }}</td>
+            <td>{{ staff.roles }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+@if (displayStaffForm) {
+<app-staff-form [staff]="this.currentEmployee" (onDismiss)="hideStaffForm()"></app-staff-form>
+}

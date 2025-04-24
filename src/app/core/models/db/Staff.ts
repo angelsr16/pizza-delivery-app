@@ -5,6 +5,7 @@ export interface Staff extends DocumentBase {
   uid: string;
   name: string;
   employeeId: string;
+  photoFile: CustomFile;
   roles: string[];
 }
 

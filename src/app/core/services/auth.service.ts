@@ -25,9 +25,15 @@ export class AuthService {
 
   private auth: Auth = inject(Auth);
 
+  justCreateNewUser: boolean = false;
+
   constructor() {
     authState(this.auth).subscribe((user) => {
-      this.currentUserSubject.next(user);
+      if (this.justCreateNewUser) {
+        this.justCreateNewUser = false;
+      } else {
+        this.currentUserSubject.next(user);
+      }
     });
   }
 
@@ -65,6 +71,8 @@ export class AuthService {
       var currentAuthenticatedUser = this.auth.currentUser;
 
       // Se crea el nuevo usuario y se loggea automaticamente a la nueva sesión
+      this.justCreateNewUser = true;
+
       var userAuth = await createUserWithEmailAndPassword(
         this.auth,
         email,
@@ -75,6 +83,7 @@ export class AuthService {
       await updateCurrentUser(this.auth, currentAuthenticatedUser);
       return userAuth.user.uid;
     } catch (error) {
+      this.justCreateNewUser = false;
       return '';
     }
   }

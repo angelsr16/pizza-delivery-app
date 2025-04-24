@@ -3,3 +3,8 @@ export interface UserDB {
   email: string;
   roles: string[];
 }
+
+export interface RawUserDB {
+  email: string;
+  roles: string;
+}
