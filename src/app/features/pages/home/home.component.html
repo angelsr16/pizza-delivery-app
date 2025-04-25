@@ -14,32 +14,60 @@
 
 <div class="w-full flex justify-center mt-10">
     <div class="2xl:w-[65%] xl:w-[75%] w-[90%] flex gap-10">
-        <div class="flex-1 w-full h-64 px-5 flex gap-5">
-            <div class="h-36 w-full rounded-xl items-center text-white cursor-pointer
-            bg-[url('/assets/images/pizza-landscape.jpg')] bg-cover bg-bottom relative"
-                style="user-select: none; -webkit-user-drag: none;">
-                <div class="bg-black w-full h-full opacity-20 hover:opacity-50 transition duration-350 rounded-xl z-10">
+        <div class="flex-1 w-full flex flex-col gap-10 px-5">
+            <div class="w-full flex gap-5 ">
+                <div (click)="handleFilterData('pizza')" class="h-36 w-full rounded-xl items-center text-white cursor-pointer
+                bg-[url('/assets/images/pizza-landscape.jpg')] bg-cover bg-bottom relative"
+                    style="user-select: none; -webkit-user-drag: none;">
+                    <div
+                        class="bg-black w-full h-full opacity-20 hover:opacity-50 transition duration-350 rounded-xl z-10">
+                    </div>
+                    <div class="flex gap-4 absolute top-0 p-10 pointer-events-none items-center h-full">
+                        <span class="text-5xl">🍕</span>
+                        <span class="font-bold text-4xl" style="text-shadow: 3px 3px 5px black;">PIZZAS</span>
+                    </div>
                 </div>
-                <div class="flex gap-4 absolute top-0 p-10 pointer-events-none items-center h-full">
-                    <span class="text-5xl">🍕</span>
-                    <span class="font-bold text-4xl" style="text-shadow: 3px 3px 5px black;">PIZZAS</span>
+
+                <div (click)="handleFilterData('drink')" class="h-36 w-full rounded-xl items-center text-white cursor-pointer
+                bg-[url('/assets/images/soda_landscape.jpg')] bg-cover bg-bottom relative"
+                    style="user-select: none; -webkit-user-drag: none;">
+                    <div
+                        class="bg-black w-full h-full opacity-20 hover:opacity-50 transition duration-350 rounded-xl z-10">
+                    </div>
+                    <div class="flex gap-4 absolute top-0 p-10 pointer-events-none items-center h-full">
+                        <span class="text-5xl">🥤</span>
+                        <span class="font-bold text-4xl" style="text-shadow: 3px 3px 5px black;">DRINKS</span>
+                    </div>
                 </div>
             </div>
+            <div class="w-full grid gap-10" [ngClass]="displayOrderDetails ? 'grid-cols-3' : 'grid-cols-4'">
+                @for (product of productsListToShow; track $index) {
+                <div class="w-full custom-shadow rounded-lg p-6 h-120 flex flex-col justify-between gap-3">
+                    <div class="flex flex-col gap-2">
+                        <img [src]="product.imageFile.downloadUrl" class="h-42 bg-cover object-center" alt="">
+                        <span class="font-bold text-xl text-blue-400">
+                            {{ product.name }}
+                        </span>
+                        <span class="text-lg font-thin"
+                            [ngClass]="displayOrderDetails ? 'line-clamp-5' : 'line-clamp-6'">
+                            {{ product.description }}
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolorum repellendus
+                            nobis natus quas ex enim illum ad blanditiis non, debitis quos, totam repudiandae iure
+                            similique minima molestiae? Enim, optio.
+                        </span>
+                    </div>
 
-            <div class="h-36 w-full rounded-xl items-center text-white cursor-pointer
-            bg-[url('/assets/images/soda_landscape.jpg')] bg-cover bg-bottom relative"
-                style="user-select: none; -webkit-user-drag: none;">
-                <div class="bg-black w-full h-full opacity-20 hover:opacity-50 transition duration-350 rounded-xl z-10">
+                    <div class="flex flex-col">
+                        <button pButton label="ADD" size="small" severity="info" icon="pi pi-cart-plus !text-2xl"
+                            iconPos="right" class="!font-black !text-lg"></button>
+                    </div>
                 </div>
-                <div class="flex gap-4 absolute top-0 p-10 pointer-events-none items-center h-full">
-                    <span class="text-5xl">🥤</span>
-                    <span class="font-bold text-4xl" style="text-shadow: 3px 3px 5px black;">DRINKS</span>
-                </div>
+                }
             </div>
         </div>
 
-        <div class="transition-all duration-350 overflow-hidden h-[calc(100vh-200px)] rounded shadow-2xl" [ngClass]="{
-          'w-64 border border-gray-700': displayOrderDetails,
+        <div class="transition-all duration-350 overflow-hidden h-[calc(100vh-200px)] rounded-lg shadow-2xl" [ngClass]="{
+          'w-64 custom-shadow': displayOrderDetails,
           'w-0': !displayOrderDetails
             }">
 
