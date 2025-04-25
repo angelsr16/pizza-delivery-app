@@ -17,7 +17,7 @@ import { UserCredential } from 'firebase/auth';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../core/services/users.service';
 import { ROLES } from '../../core/constants/roles';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 interface LoginFormGroup {
   email: FormControl<string>;
@@ -33,6 +33,7 @@ interface LoginFormGroup {
     PasswordModule,
     ButtonModule,
     ToastModule,
+    RouterLink,
   ],
   providers: [MessageService],
   standalone: true,
