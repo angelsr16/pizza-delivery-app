@@ -16,8 +16,9 @@
 <p-table [value]="staffListToShow" stripedRows showGridlines styleClass="mt-15" dataKey="id" responsiveLayout="scroll">
     <ng-template #header>
         <tr>
-            <th class="w-[10%]"></th>
+            <th class="w-[5%]"></th>
             <th class="w-[10%]">Employee ID</th>
+            <th class="w-[5%]">Photo</th>
             <th>Name</th>
             <th class="w-[25%]">Roles</th>
         </tr>
@@ -28,6 +29,9 @@
             <td class="w-[5%]" style="text-align: center;">{{ rowIndex + 1 }}</td>
             <td class="w-[5%]">
                 {{ staff.employeeId }}
+            </td>
+            <td>
+                <img [src]="staff.photoFile.downloadUrl" class="w-16" alt="">
             </td>
             <td>{{ staff.name }}</td>
             <td>{{ staff.roles }}</td>
