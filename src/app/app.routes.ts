@@ -19,6 +19,13 @@ export const routes: Routes = [
       import('./features/auth/auth.component').then((c) => c.AuthComponent),
   },
   {
+    path: 'customer-registration',
+    loadComponent: () =>
+      import(
+        './features/customer-registration/customer-registration.component'
+      ).then((c) => c.CustomerRegistrationComponent),
+  },
+  {
     path: 'admin',
     canActivate: [AuthGuard, roleGuard],
     data: {
