@@ -17,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { DeliveryMapComponent } from "../../shared/components/delivery-map/delivery-map.component";
 
 @Component({
   selector: 'app-customer-registration',
@@ -28,7 +29,8 @@ import { ToastModule } from 'primeng/toast';
     ButtonModule,
     ToastModule,
     RouterLink,
-  ],
+    DeliveryMapComponent
+],
   providers: [MessageService],
   templateUrl: './customer-registration.component.html',
   styleUrl: './customer-registration.component.scss',
