@@ -6,19 +6,19 @@
     <div class="blurred-background w-[55%] border border-gray-100">
         <div class="content p-10 text-white">
             <h3 class="text-center text-4xl font-bold mb-20">
-                Register
+                Sign Up
             </h3>
 
-            <form [formGroup]="loginFormGroup" autocomplete="off">
+            <form [formGroup]="registrationFormGroup" autocomplete="off">
                 <div class="flex gap-3">
                     <div class="flex flex-col gap-2 mb-5">
                         <label for="username"><strong>First Name</strong></label>
-                        <input pInputText id="username" aria-describedby="username-help" formControlName="email" />
+                        <input pInputText id="username" aria-describedby="username-help" formControlName="firstName" />
                     </div>
 
                     <div class="flex flex-col gap-2 mb-5">
                         <label for="username"><strong>Last Name</strong></label>
-                        <input pInputText id="username" aria-describedby="username-help" formControlName="email" />
+                        <input pInputText id="username" aria-describedby="username-help" formControlName="lastName" />
                     </div>
                 </div>
 
@@ -36,8 +36,8 @@
 
                     <div class="flex flex-col gap-2 mb-10">
                         <label for="password"><strong>Confirm Password</strong></label>
-                        <p-password styleClass="w-full" inputStyleClass="w-full" id="password"
-                            formControlName="password" [feedback]="false" toggleMask />
+                        <p-password styleClass="w-full" inputStyleClass="w-full" id="confirmPassword"
+                            formControlName="confirmPassword" [feedback]="false" toggleMask />
                     </div>
                 </div>
 
@@ -48,12 +48,13 @@
                         </strong>
                     </label>
 
-                    <app-delivery-map></app-delivery-map>
+                    <app-delivery-map [deliveryLocation]="this.deliveryLocation"></app-delivery-map>
+                    {{ deliveryLocation.lat }}
                 </div>
 
                 <div class="flex">
-                    <p-button (onClick)="this.onLoginSubmit()" [disabled]="!this.loginFormGroup.valid" label="REGISTER"
-                        styleClass="w-[full]" class="py-2 rounded-xl font-bold">
+                    <p-button (onClick)="this.onLoginSubmit()" [disabled]="!this.registrationFormGroup.valid"
+                        label="REGISTER" styleClass="w-[full]" class="py-2 rounded-xl font-bold">
                     </p-button>
                 </div>
 

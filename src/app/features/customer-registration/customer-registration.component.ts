@@ -17,7 +17,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { DeliveryMapComponent } from "../../shared/components/delivery-map/delivery-map.component";
+import { DeliveryMapComponent } from '../../shared/components/delivery-map/delivery-map.component';
+import { CustomerRegistrationFormGroup } from '../../core/models/ui/CustomerRegistrationFormGroup';
+import { DeliveryLocation } from '../../core/models/CustomerRegistrationForm';
 
 @Component({
   selector: 'app-customer-registration',
@@ -29,14 +31,18 @@ import { DeliveryMapComponent } from "../../shared/components/delivery-map/deliv
     ButtonModule,
     ToastModule,
     RouterLink,
-    DeliveryMapComponent
-],
+    DeliveryMapComponent,
+  ],
   providers: [MessageService],
   templateUrl: './customer-registration.component.html',
   styleUrl: './customer-registration.component.scss',
 })
 export class CustomerRegistrationComponent {
-  loginFormGroup!: FormGroup<LoginFormGroup>;
+  registrationFormGroup!: FormGroup<CustomerRegistrationFormGroup>;
+  deliveryLocation: DeliveryLocation = {
+    lat: 40.7128,
+    lng: -74.006,
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +73,15 @@ export class CustomerRegistrationComponent {
   }
 
   resetLoginFormGroup() {
-    this.loginFormGroup = this.fb.group<LoginFormGroup>({
+    this.registrationFormGroup = this.fb.group<CustomerRegistrationFormGroup>({
+      firstName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      lastName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
       email: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required, Validators.email],
@@ -76,24 +90,27 @@ export class CustomerRegistrationComponent {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     });
   }
 
   onLoginSubmit() {
-    const loginFormData: LoginForm = this.loginFormGroup.getRawValue();
-    this.authService
-      .login(loginFormData)
-      .then((user) => {
-        this.resetLoginFormGroup();
-      })
-      .catch((error) => {
-        this.resetLoginFormGroup();
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Incorrect email or password',
-        });
-      });
+    // const loginFormData: LoginForm = this.registrationFormGroup.getRawValue();
+    // this.authService
+    //   .login(loginFormData)
+    //   .then((user) => {
+    //     this.resetLoginFormGroup();
+    //   })
+    //   .catch((error) => {
+    //     this.resetLoginFormGroup();
+    //     this.messageService.add({
+    //       severity: 'error',
+    //       summary: 'Error',
+    //       detail: 'Incorrect email or password',
+    //     });
+    //   });
   }
 }
