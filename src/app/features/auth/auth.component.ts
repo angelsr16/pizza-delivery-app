@@ -12,7 +12,7 @@ import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../core/services/auth.service';
-import { LoginForm } from '../../core/models/LoginForm';
+import { LoginForm } from '../../core/models/ui/LoginForm';
 import { UserCredential } from 'firebase/auth';
 import { MessageService } from 'primeng/api';
 import { UsersService } from '../../core/services/users.service';

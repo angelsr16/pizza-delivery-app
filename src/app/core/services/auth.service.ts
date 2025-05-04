@@ -10,7 +10,7 @@ import {
 } from '@angular/fire/auth';
 import { authState } from 'rxfire/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LoginForm } from '../models/LoginForm';
+import { LoginForm } from '../models/ui/LoginForm';
 import { MessageService } from 'primeng/api';
 
 @Injectable({

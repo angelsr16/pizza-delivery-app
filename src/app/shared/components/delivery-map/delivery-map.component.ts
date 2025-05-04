@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as L from 'leaflet';
-import { DeliveryLocation } from '../../../core/models/CustomerRegistrationForm';
+import { DeliveryLocation } from '../../../core/models/ui/CustomerRegistrationForm';
 
 @Component({
   selector: 'app-delivery-map',

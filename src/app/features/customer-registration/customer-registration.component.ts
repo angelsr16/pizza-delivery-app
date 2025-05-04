@@ -12,14 +12,17 @@ import { MessageService } from 'primeng/api';
 import { UsersService } from '../../core/services/users.service';
 import { Router, RouterLink } from '@angular/router';
 import { LoginFormGroup } from '../../core/models/ui/LoginFromGroup';
-import { LoginForm } from '../../core/models/LoginForm';
+import { LoginForm } from '../../core/models/ui/LoginForm';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DeliveryMapComponent } from '../../shared/components/delivery-map/delivery-map.component';
 import { CustomerRegistrationFormGroup } from '../../core/models/ui/CustomerRegistrationFormGroup';
-import { DeliveryLocation } from '../../core/models/CustomerRegistrationForm';
+import {
+  CustomerRegistrationForm,
+  DeliveryLocation,
+} from '../../core/models/ui/CustomerRegistrationForm';
 
 @Component({
   selector: 'app-customer-registration',
@@ -97,10 +100,37 @@ export class CustomerRegistrationComponent {
     });
   }
 
-  onLoginSubmit() {
-    // const loginFormData: LoginForm = this.registrationFormGroup.getRawValue();
+  passwordMatchValidator() {
+    const passwordControl = this.registrationFormGroup.get('password');
+    const confirmPasswordControl =
+      this.registrationFormGroup.get('confirmPassword');
+
+    if (passwordControl?.value === confirmPasswordControl?.value) {
+      return true;
+    }
+
+    confirmPasswordControl?.setErrors({ mismatch: true });
+    return false;
+  }
+
+  onRegisterSubmit() {
+    if (this.passwordMatchValidator()) {
+      const { firstName, lastName, password, email } =
+        this.registrationFormGroup.getRawValue();
+
+      var registrationFormData: CustomerRegistrationForm = {
+        firstName,
+        lastName,
+        password,
+        email,
+        deliveryLocation: this.deliveryLocation,
+      };
+
+      console.log(registrationFormData);
+    }
+
     // this.authService
-    //   .login(loginFormData)
+    //   .login(registrationFormData)
     //   .then((user) => {
     //     this.resetLoginFormGroup();
     //   })

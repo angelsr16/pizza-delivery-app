@@ -11,7 +11,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { Counter } from '../models/db/Counter';
-import { LoginForm } from '../models/LoginForm';
+import { LoginForm } from '../models/ui/LoginForm';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { StorageService } from './storage.service';
