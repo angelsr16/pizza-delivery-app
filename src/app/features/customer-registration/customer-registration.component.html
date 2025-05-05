@@ -55,8 +55,9 @@
                 </div>
 
                 <div class="flex">
-                    <p-button (onClick)="this.onRegisterSubmit()" [disabled]="!this.registrationFormGroup.valid"
-                        label="REGISTER" styleClass="w-[full]" class="py-2 rounded-xl font-bold">
+                    <p-button (onClick)="this.onRegisterSubmit()"
+                        [disabled]="!this.registrationFormGroup.valid || isLoading" label="REGISTER"
+                        styleClass="w-[full]" class="py-2 rounded-xl font-bold">
                     </p-button>
                 </div>
 

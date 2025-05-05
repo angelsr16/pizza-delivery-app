@@ -41,17 +41,6 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  async createNewUser(email: string, password: string, onComplete: Function) {
-    var currentAuthenticatedUser = this.auth.currentUser;
-    var userAuth = await createUserWithEmailAndPassword(
-      this.auth,
-      email,
-      password
-    );
-    await updateCurrentUser(this.auth, currentAuthenticatedUser);
-    onComplete(userAuth.user.uid);
-  }
-
   async login(loginForm: LoginForm) {
     const email = loginForm.email.trim();
     const password = loginForm.password.trim();
@@ -65,7 +54,19 @@ export class AuthService {
     this.currentUserSubject.next(null);
   }
 
-  async registerNewUser(email: string, password: string): Promise<string> {
+  async registerNewCustomerUser(
+    email: string,
+    password: string
+  ): Promise<string> {
+    var userAuth = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    return userAuth.user.uid;
+  }
+
+  async registerNewUserStaff(email: string, password: string): Promise<string> {
     try {
       // Guarda usuario loggeado actualmente
       var currentAuthenticatedUser = this.auth.currentUser;

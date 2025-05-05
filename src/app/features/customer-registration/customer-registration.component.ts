@@ -19,10 +19,9 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DeliveryMapComponent } from '../../shared/components/delivery-map/delivery-map.component';
 import { CustomerRegistrationFormGroup } from '../../core/models/ui/CustomerRegistrationFormGroup';
-import {
-  CustomerRegistrationForm,
-  DeliveryLocation,
-} from '../../core/models/ui/CustomerRegistrationForm';
+import { CustomerRegistrationForm } from '../../core/models/ui/CustomerRegistrationForm';
+import { CustomersService } from '../../core/services/customers.service';
+import { DeliveryLocation } from '../../core/models/db/DeliveryLocation';
 
 @Component({
   selector: 'app-customer-registration',
@@ -47,31 +46,15 @@ export class CustomerRegistrationComponent {
     lng: -74.006,
   };
 
+  isLoading: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService,
-    private usersService: UsersService,
+    private customersService: CustomersService,
     private router: Router
   ) {
-    // this.usersService.currentUserDB$.subscribe((userDB) => {
-    //   if (userDB !== null) {
-    //     if (userDB.roles.includes(ROLES.INTERNAL_USER)) {
-    //       this.messageService.add({
-    //         severity: 'success',
-    //         summary: 'Greetings.',
-    //         detail: `Welcome ${userDB.email}`,
-    //       });
-    //       this.router.navigate(['/admin']);
-    //       return;
-    //     }
-
-    //     if (userDB.roles.includes(ROLES.CUSTOMER)) {
-    //       this.router.navigate(['/']);
-    //     }
-    //   }
-    // });
-
     this.resetLoginFormGroup();
   }
 
@@ -113,8 +96,9 @@ export class CustomerRegistrationComponent {
     return false;
   }
 
-  onRegisterSubmit() {
+  async onRegisterSubmit() {
     if (this.passwordMatchValidator()) {
+      this.isLoading = true;
       const { firstName, lastName, password, email } =
         this.registrationFormGroup.getRawValue();
 
@@ -126,21 +110,8 @@ export class CustomerRegistrationComponent {
         deliveryLocation: this.deliveryLocation,
       };
 
-      console.log(registrationFormData);
+      await this.customersService.registerCustomer(registrationFormData);
+      this.isLoading = false;
     }
-
-    // this.authService
-    //   .login(registrationFormData)
-    //   .then((user) => {
-    //     this.resetLoginFormGroup();
-    //   })
-    //   .catch((error) => {
-    //     this.resetLoginFormGroup();
-    //     this.messageService.add({
-    //       severity: 'error',
-    //       summary: 'Error',
-    //       detail: 'Incorrect email or password',
-    //     });
-    //   });
   }
 }

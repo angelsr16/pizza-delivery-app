@@ -58,7 +58,7 @@ export class StaffService {
       this.staffDocumentName
     );
 
-    const newUserUid = await this.authService.registerNewUser(
+    const newUserUid = await this.authService.registerNewUserStaff(
       loginForm.email,
       loginForm.password
     );

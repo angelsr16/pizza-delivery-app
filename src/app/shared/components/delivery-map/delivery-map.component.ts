@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as L from 'leaflet';
-import { DeliveryLocation } from '../../../core/models/ui/CustomerRegistrationForm';
+import { DeliveryLocation } from '../../../core/models/db/DeliveryLocation';
 
 @Component({
   selector: 'app-delivery-map',
@@ -48,7 +48,7 @@ export class DeliveryMapComponent {
       const position = this.marker.getLatLng();
       console.log('New position:', position.lat, position.lng);
       this.deliveryLocation.lat = position.lat;
-      this.deliveryLocation.lng = position.lng
+      this.deliveryLocation.lng = position.lng;
     });
   }
 }
