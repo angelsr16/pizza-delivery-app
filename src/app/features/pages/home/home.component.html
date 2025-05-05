@@ -7,6 +7,18 @@
                 <i (click)="displayOrderDetails = !displayOrderDetails" class="pi pi-shopping-cart cursor-pointer"
                     style="font-size: 32px;"></i>
             </li>
+
+            @if (currentUser) {
+            <li>
+                <i (click)="op.toggle($event)" class="pi pi-user cursor-pointer" style="font-size: 32px;"></i>
+            </li>
+            <p-overlayPanel #op>
+                <span class="cursor-pointer p-3" (click)="onSignOutClick()">
+                    Log Out
+                    <i class="pi pi-sign-out"></i>
+                </span>
+            </p-overlayPanel>
+            }
         </ul>
     </div>
 </div>
@@ -51,15 +63,12 @@
                         <span class="text-lg font-thin"
                             [ngClass]="displayOrderDetails ? 'line-clamp-5' : 'line-clamp-6'">
                             {{ product.description }}
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolorum repellendus
-                            nobis natus quas ex enim illum ad blanditiis non, debitis quos, totam repudiandae iure
-                            similique minima molestiae? Enim, optio.
                         </span>
                     </div>
 
                     <div class="flex flex-col">
-                        <button pButton label="ADD" size="small" severity="info" icon="pi pi-cart-plus !text-2xl"
-                            iconPos="right" class="!font-black !text-lg"></button>
+                        <button (click)="addProductToCart(product)" pButton label="ADD" size="small" severity="info"
+                            icon="pi pi-cart-plus !text-2xl" iconPos="right" class="!font-black !text-lg"></button>
                     </div>
                 </div>
                 }
@@ -73,8 +82,7 @@
 
             <div class="p-5">
                 @if (displayOrderDetails) {
-                @if (!isCustomerLoggedIn) {
-
+                @if (!currentUser) {
                 <div class="flex flex-col gap-4">
                     <span class="font-semibold text-center text-xl text-red-400">
                         You need to log in before adding items to your cart
@@ -83,6 +91,9 @@
                     <button routerLink="login" pButton label="LOG IN" severity="contrast"></button>
                 </div>
 
+                }
+                @else {
+                <app-side-cart-details></app-side-cart-details>
                 }
                 }
             </div>

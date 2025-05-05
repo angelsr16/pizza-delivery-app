@@ -7,10 +7,21 @@ import { CartService } from '../../../core/services/cart.service';
 import { UsersService } from '../../../core/services/users.service';
 import { CartDB } from '../../../core/models/db/Cart';
 import { RouterLink } from '@angular/router';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserDB } from '../../../core/models/UserDB';
+import { Timestamp } from '@angular/fire/firestore';
+import { SideCartDetailsComponent } from './side-cart-details/side-cart-details.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, ButtonModule, RouterLink],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    RouterLink,
+    OverlayPanelModule,
+    SideCartDetailsComponent,
+  ],
   standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -20,18 +31,19 @@ export class HomeComponent implements OnInit {
   productsListToShow: Product[] = [];
 
   currentCart: CartDB | undefined;
+  currentUser: UserDB | undefined;
 
   filterData = {
     type: 'pizza',
   };
 
   displayOrderDetails: boolean = false;
-  isCustomerLoggedIn: boolean = false;
 
   constructor(
     private productsService: ProductsService,
     private cartService: CartService,
-    private userService: UsersService
+    private userService: UsersService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -46,15 +58,27 @@ export class HomeComponent implements OnInit {
     });
 
     this.userService.currentUserDB$.subscribe((user) => {
-      this.isCustomerLoggedIn = false;
+      this.currentUser = undefined;
       if (user && user.roles.includes('customer')) {
-        this.isCustomerLoggedIn = true;
+        this.currentUser = user;
 
         this.cartService.getCartByUserId(user.id).subscribe((cart) => {
           this.currentCart = cart;
+          console.log(this.currentCart);
         });
       }
     });
+  }
+
+  addProductToCart(product: Product) {
+    this.displayOrderDetails = true;
+    if (this.currentCart && this.currentUser) {
+    } else {
+    }
+  }
+
+  onSignOutClick() {
+    this.authService.logout();
   }
 
   handleFilterData(type: string) {

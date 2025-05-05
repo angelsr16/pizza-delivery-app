@@ -28,6 +28,20 @@ export class CartService {
     this.collectionReference = collection(this.db, this.collectionName);
   }
 
+  addProductToCartdId(cartId: string) {}
+
+  async registerCart(userId: string) {
+    const cartDocumentRef = doc(this.collectionReference, userId);
+
+    const cart: CartDB = {
+      userId,
+      items: [],
+      updatedAt: Timestamp.now(),
+    };
+
+    await setDoc(cartDocumentRef, cart);
+  }
+
   getCartByUserId(userId: string): Observable<CartDB | undefined> {
     const cartDocumentRef = doc(this.collectionReference, userId);
 

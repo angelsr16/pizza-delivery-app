@@ -12,6 +12,7 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 import { setDoc } from 'firebase/firestore';
+import { CartService } from './cart.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ export class CustomersService {
   constructor(
     private db: Firestore,
     private authService: AuthService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private cartsService: CartService
   ) {
     this.collectionReference = collection(this.db, this.collectionName);
   }
@@ -60,6 +62,7 @@ export class CustomersService {
       updatedAt: Timestamp.now(),
     };
 
+    await this.cartsService.registerCart(newUserUid);
     await setDoc(customerDoc, customerData);
   }
 }
