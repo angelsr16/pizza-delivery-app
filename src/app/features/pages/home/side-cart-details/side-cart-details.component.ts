@@ -34,4 +34,8 @@ export class SideCartDetailsComponent implements OnInit {
   onAddQuantityClick(item: CartItem, itemIndex: number) {
     this.cartService.addItemQuantity(item, itemIndex);
   }
+
+  onRemoveItemClick(itemIndex: number) {
+    this.cartService.removeItem(itemIndex);
+  }
 }

@@ -162,6 +162,28 @@ export class CartService {
     }
   }
 
+  removeItem(itemIndex: number) {
+    const cart: Cart | null = this.cartSubject.getValue();
+    if (cart) {
+      const cartItemsDB: CartItemDB[] = [];
+      cart.items.forEach((cartItem) => {
+        cartItemsDB.push({
+          productId: cartItem.product.id,
+          quantity: cartItem.quantity,
+          extraInfo: cartItem.extraInfo,
+        });
+      });
+
+      cartItemsDB.splice(itemIndex, 1);
+
+      const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
+
+      updateDoc(cartDocumentRef, {
+        items: cartItemsDB,
+      });
+    }
+  }
+
   async registerCart(userId: string) {
     const cartDocumentRef = doc(this.collectionReference, userId);
 
