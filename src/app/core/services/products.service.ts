@@ -5,6 +5,7 @@ import {
   CollectionReference,
   doc,
   Firestore,
+  getDoc,
   setDoc,
   Timestamp,
   updateDoc,
@@ -84,5 +85,13 @@ export class ProductsService {
     };
 
     await setDoc(newProductDoc, newProductData);
+  }
+
+  async getProductById(productId: string): Promise<Product | undefined> {
+    const productDocumentRef = doc(this.collectionReference, productId);
+
+    const documentSnapshot = await getDoc(productDocumentRef);
+
+    return documentSnapshot.data() as Product;
   }
 }

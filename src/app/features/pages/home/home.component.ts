@@ -5,7 +5,7 @@ import { Product } from '../../../core/models/db/Product';
 import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../../core/services/cart.service';
 import { UsersService } from '../../../core/services/users.service';
-import { CartDB } from '../../../core/models/db/Cart';
+import { Cart, CartDB } from '../../../core/models/db/Cart';
 import { RouterLink } from '@angular/router';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { AuthService } from '../../../core/services/auth.service';
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   productsList: Product[] = [];
   productsListToShow: Product[] = [];
 
-  currentCart: CartDB | undefined;
+  currentCart!: Cart | undefined;
   currentUser: UserDB | undefined;
 
   filterData = {
@@ -61,20 +61,19 @@ export class HomeComponent implements OnInit {
       this.currentUser = undefined;
       if (user && user.roles.includes('customer')) {
         this.currentUser = user;
+      }
+    });
 
-        this.cartService.getCartByUserId(user.id).subscribe((cart) => {
-          this.currentCart = cart;
-          console.log(this.currentCart);
-        });
+    this.cartService.cart$.subscribe((cart) => {
+      if (cart) {
+        this.currentCart = cart;
       }
     });
   }
 
   addProductToCart(product: Product) {
     this.displayOrderDetails = true;
-    if (this.currentCart && this.currentUser) {
-    } else {
-    }
+    this.cartService.addProductToCart(product);
   }
 
   onSignOutClick() {

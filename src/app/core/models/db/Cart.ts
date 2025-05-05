@@ -1,26 +1,26 @@
 import { Timestamp } from '@angular/fire/firestore';
 import { Product } from './Product';
+import { DocumentBase } from './DocumentBase';
 
-export interface CartDB {
+export interface CartDB extends DocumentBase {
   userId: string;
   items: CartItemDB[];
-  updatedAt: Timestamp;
 }
 
 export interface CartItemDB {
   productId: string;
-  quantity: string;
+  quantity: number;
   extraInfo: string;
 }
 
 export interface Cart {
+  id: string;
   userId: string;
   items: CartItem[];
-  updatedAt: Timestamp;
 }
 
 export interface CartItem {
   product: Product;
-  quantity: string;
+  quantity: number;
   extraInfo: string;
 }
