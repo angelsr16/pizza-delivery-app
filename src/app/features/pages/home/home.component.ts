@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
   productsList: Product[] = [];
   productsListToShow: Product[] = [];
 
+  isCartLoading: boolean = false;
+
   currentCart!: Cart | undefined;
   currentUser: UserDB | undefined;
 

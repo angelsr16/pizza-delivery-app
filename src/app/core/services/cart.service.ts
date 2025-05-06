@@ -115,7 +115,7 @@ export class CartService {
     }
   }
 
-  removeItemQuantity(item: CartItem, itemIndex: number) {
+  async removeItemQuantity(item: CartItem, itemIndex: number) {
     const cart: Cart | null = this.cartSubject.getValue();
     if (cart) {
       const cartItemsDB: CartItemDB[] = [];
@@ -134,13 +134,13 @@ export class CartService {
 
       const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
 
-      updateDoc(cartDocumentRef, {
+      await updateDoc(cartDocumentRef, {
         items: cartItemsDB,
       });
     }
   }
 
-  addItemQuantity(item: CartItem, itemIndex: number) {
+  async addItemQuantity(item: CartItem, itemIndex: number) {
     const cart: Cart | null = this.cartSubject.getValue();
     if (cart) {
       const cartItemsDB: CartItemDB[] = [];
@@ -156,13 +156,13 @@ export class CartService {
 
       const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
 
-      updateDoc(cartDocumentRef, {
+      await updateDoc(cartDocumentRef, {
         items: cartItemsDB,
       });
     }
   }
 
-  removeItem(itemIndex: number) {
+  async removeItem(itemIndex: number) {
     const cart: Cart | null = this.cartSubject.getValue();
     if (cart) {
       const cartItemsDB: CartItemDB[] = [];
@@ -178,7 +178,7 @@ export class CartService {
 
       const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
 
-      updateDoc(cartDocumentRef, {
+      await updateDoc(cartDocumentRef, {
         items: cartItemsDB,
       });
     }

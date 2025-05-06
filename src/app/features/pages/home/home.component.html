@@ -75,15 +75,16 @@
             </div>
         </div>
 
-        <div class="transition-all duration-350 overflow-hidden h-[calc(100vh-200px)] rounded-lg shadow-2xl" [ngClass]="{
+        <div class="transition-all duration-350 overflow-hidden h-[calc(100vh-200px)] rounded-lg shadow-2xl relative"
+            [ngClass]="{
           'w-64 custom-shadow': displayOrderDetails,
           'w-0': !displayOrderDetails
             }">
 
-            <div class="p-5">
+            <div>
                 @if (displayOrderDetails) {
                 @if (!currentUser) {
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4 p-5">
                     <span class="font-semibold text-center text-xl text-red-400">
                         You need to log in before adding items to your cart
                     </span>
@@ -93,7 +94,14 @@
 
                 }
                 @else {
-                <app-side-cart-details [userId]="currentUser.id"></app-side-cart-details>
+                @if (isCartLoading)
+                {
+                <div class="w-full h-full absolute opacity-40 bg-black z-10 flex justify-center items-center">
+                    <i class="pi pi-spinner pi-spin text-white" style="font-size: 3em;"></i>
+                </div>
+                }
+                <app-side-cart-details (onLoadingChange)="this.isCartLoading = $event"
+                    [userId]="currentUser.id"></app-side-cart-details>
                 }
                 }
             </div>

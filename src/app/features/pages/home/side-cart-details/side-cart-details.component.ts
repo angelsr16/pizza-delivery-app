@@ -1,17 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Cart, CartDB, CartItem } from '../../../../core/models/db/Cart';
 import { CartService } from '../../../../core/services/cart.service';
 import { ProductsService } from '../../../../core/services/products.service';
-import { Product } from '../../../../core/models/db/Product';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-side-cart-details',
-  imports: [],
+  imports: [ButtonModule],
   templateUrl: './side-cart-details.component.html',
   styleUrl: './side-cart-details.component.scss',
 })
 export class SideCartDetailsComponent implements OnInit {
   @Input() userId!: string;
+  @Output() onLoadingChange: EventEmitter<boolean> = new EventEmitter(false);
+
   cartData!: Cart;
 
   constructor(
@@ -27,15 +29,21 @@ export class SideCartDetailsComponent implements OnInit {
     });
   }
 
-  onRemoveQuantityClick(item: CartItem, itemIndex: number) {
-    this.cartService.removeItemQuantity(item, itemIndex);
+  async onRemoveQuantityClick(item: CartItem, itemIndex: number) {
+    this.onLoadingChange.emit(true);
+    await this.cartService.removeItemQuantity(item, itemIndex);
+    this.onLoadingChange.emit(false);
   }
 
-  onAddQuantityClick(item: CartItem, itemIndex: number) {
-    this.cartService.addItemQuantity(item, itemIndex);
+  async onAddQuantityClick(item: CartItem, itemIndex: number) {
+    this.onLoadingChange.emit(true);
+    await this.cartService.addItemQuantity(item, itemIndex);
+    this.onLoadingChange.emit(false);
   }
 
-  onRemoveItemClick(itemIndex: number) {
-    this.cartService.removeItem(itemIndex);
+  async onRemoveItemClick(itemIndex: number) {
+    this.onLoadingChange.emit(true);
+    await this.cartService.removeItem(itemIndex);
+    this.onLoadingChange.emit(false);
   }
 }

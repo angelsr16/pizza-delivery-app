@@ -1,4 +1,5 @@
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-5 relative p-5">
+
     @for (item of cartData.items; track $index) {
     <div class="flex gap-4 items-center justify-between">
         <img [src]="item.product.imageFile.downloadUrl" alt="cart item image" class="w-[20%] h-[100%]">
@@ -10,9 +11,11 @@
                 </span>
 
                 <div class="flex gap-2 items-center text-lg">
-                    <i (click)="onRemoveQuantityClick(item, $index)" class="pi pi-angle-left cursor-pointer"></i>
+                    <i (click)="onRemoveQuantityClick(item, $index)"
+                        class="pi pi-angle-left cursor-pointer border border-gray-500 p-1"></i>
                     <span>{{ item.quantity }}</span>
-                    <i (click)="onAddQuantityClick(item, $index)" class="pi pi-angle-right cursor-pointer"></i>
+                    <i (click)="onAddQuantityClick(item, $index)"
+                        class="pi pi-angle-right cursor-pointer border border-gray-500 p-1"></i>
                 </div>
             </div>
 
@@ -22,4 +25,6 @@
         </div>
     </div>
     }
+
+    <button pButton label="PLACE ORDER"></button>
 </div>
