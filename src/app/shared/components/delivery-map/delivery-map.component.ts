@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { DeliveryLocation } from '../../../core/models/db/DeliveryLocation';
 
@@ -10,12 +10,14 @@ import { DeliveryLocation } from '../../../core/models/db/DeliveryLocation';
 })
 export class DeliveryMapComponent {
   @Input() deliveryLocation!: DeliveryLocation;
+  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
 
   private map!: L.Map;
   private marker!: L.Marker;
 
   ngAfterViewInit(): void {
-    this.map = L.map('map').setView(
+    console.log(this.deliveryLocation);
+    this.map = L.map(this.mapContainer.nativeElement).setView(
       [this.deliveryLocation.lat, this.deliveryLocation.lng],
       15
     ); // Default center
@@ -50,5 +52,9 @@ export class DeliveryMapComponent {
       this.deliveryLocation.lat = position.lat;
       this.deliveryLocation.lng = position.lng;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.map.remove();
   }
 }

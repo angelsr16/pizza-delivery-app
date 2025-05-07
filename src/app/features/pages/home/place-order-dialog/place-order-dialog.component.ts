@@ -7,6 +7,9 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Drink, Pizza, Product } from '../../../../core/models/db/Product';
 import { SelectModule } from 'primeng/select';
+import { DecimalPipe } from '@angular/common';
+import { DeliveryMapComponent } from '../../../../shared/components/delivery-map/delivery-map.component';
+import { DeliveryLocation } from '../../../../core/models/db/DeliveryLocation';
 
 @Component({
   selector: 'app-place-order-dialog',
@@ -16,6 +19,8 @@ import { SelectModule } from 'primeng/select';
     SelectButtonModule,
     FormsModule,
     SelectModule,
+    DecimalPipe,
+    DeliveryMapComponent,
   ],
   templateUrl: './place-order-dialog.component.html',
   styleUrl: './place-order-dialog.component.scss',
@@ -35,9 +40,14 @@ export class PlaceOrderDialogComponent {
     {
       label: 'Restaurant',
       value: 1,
-      icon: 'pi pi-warehouse',
+      icon: 'pi pi-shop',
     },
   ];
+
+  deliveryLocation: DeliveryLocation = {
+    lat: 40.7128,
+    lng: -74.006,
+  };
 
   isPizza(product: Product): product is Pizza {
     return product.type === 'pizza';
@@ -48,6 +58,14 @@ export class PlaceOrderDialogComponent {
   }
 
   constructor(private cartsService: CartService) {}
+
+  onDecreaseQuantityClick(itemIndex: number) {
+    this.cartsService.removeItemQuantity(itemIndex);
+  }
+
+  onIncreaseQuantityClick(itemIndex: number) {
+    this.cartsService.addItemQuantity(itemIndex);
+  }
 
   handlePlaceOrder() {}
 }
