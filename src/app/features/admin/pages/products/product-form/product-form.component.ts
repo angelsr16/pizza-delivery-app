@@ -160,13 +160,13 @@ export class ProductFormComponent implements OnInit {
     return formList;
   }
 
-  isPizza(product: Product): product is Pizza {
-    return product.type === 'pizza';
-  }
+  // isPizza(product: Product): product is Pizza {
+  //   return product.type === 'pizza';
+  // }
 
-  isDrink(product: Product): product is Drink {
-    return product.type === 'drink';
-  }
+  // isDrink(product: Product): product is Drink {
+  //   return product.type === 'drink';
+  // }
 
   async handleRegisterProduct() {
     if (this.productImageFile) {

@@ -3,6 +3,7 @@ import { Cart, CartDB, CartItem } from '../../../../core/models/db/Cart';
 import { CartService } from '../../../../core/services/cart.service';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ButtonModule } from 'primeng/button';
+import { Drink, Pizza, Product } from '../../../../core/models/db/Product';
 
 @Component({
   selector: 'app-side-cart-details',
@@ -13,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 export class SideCartDetailsComponent implements OnInit {
   @Input() userId!: string;
   @Output() onLoadingChange: EventEmitter<boolean> = new EventEmitter(false);
+  @Output() onPlaceOrderClick: EventEmitter<any> = new EventEmitter();
 
   cartData!: Cart;
 
@@ -31,13 +33,13 @@ export class SideCartDetailsComponent implements OnInit {
 
   async onRemoveQuantityClick(item: CartItem, itemIndex: number) {
     this.onLoadingChange.emit(true);
-    await this.cartService.removeItemQuantity(item, itemIndex);
+    await this.cartService.removeItemQuantity(itemIndex);
     this.onLoadingChange.emit(false);
   }
 
   async onAddQuantityClick(item: CartItem, itemIndex: number) {
     this.onLoadingChange.emit(true);
-    await this.cartService.addItemQuantity(item, itemIndex);
+    await this.cartService.addItemQuantity(itemIndex);
     this.onLoadingChange.emit(false);
   }
 

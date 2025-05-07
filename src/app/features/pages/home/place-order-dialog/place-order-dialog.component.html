@@ -1,0 +1,46 @@
+<p-dialog header="ORDER" [modal]="true" [visible]="true" [style]="{ width: '50%' }" (visibleChange)="onDismiss.emit()">
+    <div class="flex flex-col px-10 py-5 gap-10">
+        <div class="flex flex-col gap-2">
+            <span class="p-text-secondary block text-3xl">Where are you at?</span>
+            <p-selectbutton size="large" [options]="deliveryTypes" [(ngModel)]="currentDeliveryType"
+                pButtonIcon="pi pi-address-book" optionLabel="label" optionValue="value" aria-labelledby="basic">
+                <ng-template #item let-item>
+                    <i [class]="item.icon"></i>
+                    {{ item.label }}
+                </ng-template>
+            </p-selectbutton>
+        </div>
+
+        @switch (currentDeliveryType) {
+        @case (0) {
+        MAP
+
+        @for (item of cart.items; track $index) {
+        <div class="flex gap-4">
+            <img [src]="item.product.imageFile.downloadUrl" alt="" class="w-[20%] h-[100%]">
+
+            <div class=" flex flex-col gap-2">
+                <span class="text-blue-500 font-bold text-lg">{{ item.product.name }}</span>
+
+                @if (isPizza(item.product)) {
+
+                <p-select [options]="item.product.sizes" optionLabel="size" optionValue="size"
+                    placeholder="Select a size" appendTo="body" class="w-full md:w-56" />
+                }
+
+            </div>
+        </div>
+        }
+        }
+        @case (1) {
+        RESTAURANT
+        }
+        }
+
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="onDismiss.emit()" />
+        <p-button label="PLACE ORDER" (click)="handlePlaceOrder()" />
+    </div>
+</p-dialog>

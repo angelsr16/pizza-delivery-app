@@ -100,11 +100,15 @@
                     <i class="pi pi-spinner pi-spin text-white" style="font-size: 3em;"></i>
                 </div>
                 }
-                <app-side-cart-details (onLoadingChange)="this.isCartLoading = $event"
-                    [userId]="currentUser.id"></app-side-cart-details>
+                <app-side-cart-details (onLoadingChange)="this.isCartLoading = $event" [userId]="currentUser.id"
+                    (onPlaceOrderClick)="this.displayPlaceOrderDialog = true"></app-side-cart-details>
                 }
                 }
             </div>
         </div>
     </div>
 </div>
+
+@if (displayPlaceOrderDialog && currentCart) {
+<app-place-order-dialog [cart]="currentCart" (onDismiss)="displayPlaceOrderDialog = false"></app-place-order-dialog>
+}

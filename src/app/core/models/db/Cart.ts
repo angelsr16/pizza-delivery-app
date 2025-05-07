@@ -9,6 +9,8 @@ export interface CartDB extends DocumentBase {
 
 export interface CartItemDB {
   productId: string;
+  size?: string;
+  price: number;
   quantity: number;
   extraInfo: string;
 }
@@ -21,6 +23,8 @@ export interface Cart {
 
 export interface CartItem {
   product: Product;
+  size?: string;
+  price: number;
   quantity: number;
   extraInfo: string;
 }

@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { UserDB } from '../../../core/models/UserDB';
 import { Timestamp } from '@angular/fire/firestore';
 import { SideCartDetailsComponent } from './side-cart-details/side-cart-details.component';
+import { PlaceOrderDialogComponent } from './place-order-dialog/place-order-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ import { SideCartDetailsComponent } from './side-cart-details/side-cart-details.
     RouterLink,
     OverlayPanelModule,
     SideCartDetailsComponent,
+    PlaceOrderDialogComponent,
   ],
   standalone: true,
   templateUrl: './home.component.html',
@@ -40,6 +42,7 @@ export class HomeComponent implements OnInit {
   };
 
   displayOrderDetails: boolean = false;
+  displayPlaceOrderDialog: boolean = false;
 
   constructor(
     private productsService: ProductsService,

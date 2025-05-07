@@ -17,7 +17,7 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart, CartDB, CartItem, CartItemDB } from '../models/db/Cart';
 import { UsersService } from './users.service';
-import { Product } from '../models/db/Product';
+import { Drink, Pizza, Product } from '../models/db/Product';
 import { ProductsService } from './products.service';
 
 @Injectable({
@@ -26,22 +26,20 @@ import { ProductsService } from './products.service';
 export class CartService {
   private cartSubject: BehaviorSubject<Cart | null> =
     new BehaviorSubject<Cart | null>(null);
-
   public cart$: Observable<Cart | null> = this.cartSubject.asObservable();
 
   cartData!: Cart;
-
   collectionName: string = 'pd_carts';
-  collectionReference!: CollectionReference;
+  collectionReference: CollectionReference;
 
   constructor(
     private db: Firestore,
-    private usersSerivice: UsersService,
+    private usersService: UsersService,
     private productsService: ProductsService
   ) {
     this.collectionReference = collection(this.db, this.collectionName);
 
-    this.usersSerivice.currentUserDB$.subscribe(async (user) => {
+    this.usersService.currentUserDB$.subscribe((user) => {
       if (user && user.roles.includes('customer')) {
         this.getCartByUserId(user.id).subscribe((cart) => {
           if (cart) {
@@ -52,25 +50,53 @@ export class CartService {
     });
   }
 
+  private isPizza(product: Product): product is Pizza {
+    return product.type === 'pizza';
+  }
+
+  private isDrink(product: Product): product is Drink {
+    return product.type === 'drink';
+  }
+
+  private mapCartItemToDB(item: CartItem): CartItemDB {
+    const base: CartItemDB = {
+      productId: item.product.id,
+      quantity: item.quantity,
+      extraInfo: item.extraInfo,
+      price: item.price,
+    };
+
+    if (this.isPizza(item.product)) {
+      return { ...base, size: item.size ?? item.product.sizes[0].size };
+    }
+
+    return base;
+  }
+
   async loadCartData(cartDB: CartDB) {
-    var cartData: Cart;
+    const cartItems: CartItem[] = await Promise.all(
+      cartDB.items.map(async (cartItem) => {
+        const productData = await this.productsService.getProductById(
+          cartItem.productId
+        );
+        if (!productData) return null;
 
-    var cartItems: CartItem[] = [];
-
-    cartDB.items.forEach(async (cartItem) => {
-      const productData: Product | undefined =
-        await this.productsService.getProductById(cartItem.productId);
-
-      if (productData) {
-        cartItems.push({
+        const item: CartItem = {
           quantity: cartItem.quantity,
           extraInfo: cartItem.extraInfo,
           product: productData,
-        });
-      }
-    });
+          price: cartItem.price,
+        };
 
-    cartData = {
+        if (this.isPizza(productData)) {
+          item.size = cartItem.size ?? productData.sizes[0].size;
+        }
+
+        return item;
+      })
+    ).then((items) => items.filter((i): i is CartItem => i !== null));
+
+    const cartData: Cart = {
       id: cartDB.id,
       userId: cartDB.userId,
       items: cartItems,
@@ -80,130 +106,96 @@ export class CartService {
   }
 
   async addProductToCart(product: Product) {
-    const cart: Cart | null = this.cartSubject.getValue();
-    if (cart) {
-      var foundProduct: boolean = false;
+    const cart = this.cartSubject.getValue();
+    if (!cart) return;
 
-      const cartItemsDB: CartItemDB[] = [];
-      cart.items.forEach((cartItem) => {
-        var currentQuantity = cartItem.quantity;
-        if (cartItem.product.id === product.id) {
-          foundProduct = true;
-          currentQuantity += 1;
-        }
+    const existingItemIndex = cart.items.findIndex(
+      (i) => i.product.id === product.id
+    );
+    let updated = false;
 
-        cartItemsDB.push({
-          productId: cartItem.product.id,
-          quantity: currentQuantity,
-          extraInfo: cartItem.extraInfo,
-        });
-      });
+    if (existingItemIndex > -1) {
+      cart.items[existingItemIndex].quantity += 1;
+      updated = true;
+    } else {
+      const newItem: CartItem = {
+        quantity: 1,
+        extraInfo: '',
+        product,
+        price: this.isPizza(product)
+          ? product.sizes[0].price
+          : product.price ?? 0,
+        size: this.isPizza(product) ? product.sizes[0].size : undefined,
+      };
+      cart.items.push(newItem);
+      updated = true;
+    }
 
-      if (!foundProduct) {
-        cartItemsDB.push({
-          productId: product.id,
-          quantity: 1,
-          extraInfo: '',
-        });
-      }
-
-      const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
-
-      updateDoc(cartDocumentRef, {
-        items: cartItemsDB,
-      });
+    if (updated) {
+      const cartItemsDB = cart.items.map(this.mapCartItemToDB.bind(this));
+      const cartRef = doc(this.db, this.collectionName, cart.id);
+      await updateDoc(cartRef, { items: cartItemsDB });
     }
   }
 
-  async removeItemQuantity(item: CartItem, itemIndex: number) {
-    const cart: Cart | null = this.cartSubject.getValue();
-    if (cart) {
-      const cartItemsDB: CartItemDB[] = [];
-      cart.items.forEach((cartItem) => {
-        cartItemsDB.push({
-          productId: cartItem.product.id,
-          quantity: cartItem.quantity,
-          extraInfo: cartItem.extraInfo,
-        });
-      });
+  async addItemQuantity(index: number) {
+    const cart = this.cartSubject.getValue();
+    if (!cart) return;
 
-      cartItemsDB[itemIndex].quantity -= 1;
-      if (cartItemsDB[itemIndex].quantity === 0) {
-        cartItemsDB.splice(itemIndex, 1);
-      }
-
-      const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
-
-      await updateDoc(cartDocumentRef, {
-        items: cartItemsDB,
-      });
-    }
+    cart.items[index].quantity += 1;
+    const cartItemsDB = cart.items.map(this.mapCartItemToDB.bind(this));
+    await updateDoc(doc(this.db, this.collectionName, cart.id), {
+      items: cartItemsDB,
+    });
   }
 
-  async addItemQuantity(item: CartItem, itemIndex: number) {
-    const cart: Cart | null = this.cartSubject.getValue();
-    if (cart) {
-      const cartItemsDB: CartItemDB[] = [];
-      cart.items.forEach((cartItem) => {
-        cartItemsDB.push({
-          productId: cartItem.product.id,
-          quantity: cartItem.quantity,
-          extraInfo: cartItem.extraInfo,
-        });
-      });
+  async removeItemQuantity(index: number) {
+    const cart = this.cartSubject.getValue();
+    if (!cart) return;
 
-      cartItemsDB[itemIndex].quantity += 1;
+    cart.items[index].quantity -= 1;
 
-      const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
-
-      await updateDoc(cartDocumentRef, {
-        items: cartItemsDB,
-      });
+    if (cart.items[index].quantity <= 0) {
+      cart.items.splice(index, 1);
     }
+
+    const cartItemsDB = cart.items.map(this.mapCartItemToDB.bind(this));
+    await updateDoc(doc(this.db, this.collectionName, cart.id), {
+      items: cartItemsDB,
+    });
   }
 
-  async removeItem(itemIndex: number) {
-    const cart: Cart | null = this.cartSubject.getValue();
-    if (cart) {
-      const cartItemsDB: CartItemDB[] = [];
-      cart.items.forEach((cartItem) => {
-        cartItemsDB.push({
-          productId: cartItem.product.id,
-          quantity: cartItem.quantity,
-          extraInfo: cartItem.extraInfo,
-        });
-      });
+  async removeItem(index: number) {
+    const cart = this.cartSubject.getValue();
+    if (!cart) return;
 
-      cartItemsDB.splice(itemIndex, 1);
-
-      const cartDocumentRef = doc(this.db, this.collectionName, cart.id);
-
-      await updateDoc(cartDocumentRef, {
-        items: cartItemsDB,
-      });
-    }
+    cart.items.splice(index, 1);
+    const cartItemsDB = cart.items.map(this.mapCartItemToDB.bind(this));
+    await updateDoc(doc(this.db, this.collectionName, cart.id), {
+      items: cartItemsDB,
+    });
   }
 
   async registerCart(userId: string) {
-    const cartDocumentRef = doc(this.collectionReference, userId);
+    const cartRef = doc(this.collectionReference, userId);
 
     const cart: CartDB = {
-      id: cartDocumentRef.id,
+      id: cartRef.id,
       userId,
       items: [],
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     };
 
-    await setDoc(cartDocumentRef, cart);
+    await setDoc(cartRef, cart);
   }
 
   getCartByUserId(userId: string): Observable<CartDB | undefined> {
-    const cartDocumentRef = doc(this.collectionReference, userId);
+    const cartRef = doc(this.collectionReference, userId);
 
     return new Observable((observer) => {
       const unsubscribe = onSnapshot(
-        cartDocumentRef,
+        cartRef,
         (docSnap) => {
           if (docSnap.exists()) {
             observer.next(docSnap.data() as CartDB);
@@ -211,10 +203,9 @@ export class CartService {
             observer.next(undefined);
           }
         },
-        (error) => {
-          observer.error(error);
-        }
+        (error) => observer.error(error)
       );
+
       return () => unsubscribe();
     });
   }
